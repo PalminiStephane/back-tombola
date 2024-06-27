@@ -1,0 +1,124 @@
+    <!-- Nav -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-ligth" style="background-color: #e3f2fd;">
+        <div class="container-fluid">
+            <a href="{{ path("default") }}" class="d-flex align-items-center mb-2 mb-lg-0 text-black text-decoration-none header-logo">
+                <img src="{{ asset('favicon.png') }}" height="24" alt="Logo GTP">
+                <span class="header-logo__title">GTP</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{ path("default") }}">Accueil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('default') }}"><i class="bi bi-film"></i> Lots</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('default')}}"><i class="bi bi-bookmark"></i> A propos</a>
+                    </li>
+                </ul>
+                {# Dylan
+                {% if app.user == null %}
+				<span>User</span>
+				<a href="{{ path('app_login')}}" class="btn btn-danger me-2">Connexion</a>
+			{% else %}
+				<ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+							<span>{{ app.user.email }}</span>
+							<i class="bi bi-person-square"></i>
+						</a>
+						<ul class="dropdown-menu">
+							<li>
+								<a class="dropdown-item" href="#">{{app.user.roles[0]}}</a>
+								
+							</li>
+
+
+							
+							<li>
+								<a class="dropdown-item" href="{{ path('app_backoffice_dashboard') }}">Backoffice</a>
+							</li>
+
+
+
+
+							<li>
+								<hr class="dropdown-divider">
+							</li>
+							<li>
+								<a class="dropdown-item" href="{{ path('app_logout')}}">Déconnexion</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			{% endif %}
+                #}
+                {# Julien
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item dropdown">
+                        
+                             {% dump(app.user)%}
+                             {% if app.user %}
+                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-bs-toggle="dropdown">
+                            <span>{{ app.user.email}}</span>
+                            <i class="bi bi-person-square"></i>
+
+
+                            </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">Profil</a></li>
+                            <li><a class="dropdown-item" href="{{ path('app_backoffice') }}">Backoffice</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="{{ path('app_logout')}}">Déconnexion</a></li>
+                        </ul>
+                            {% else %}
+
+
+                            <a href="{{ path('app_login')}}" class="btn btn-danger me-2">Connexion</a>
+                             </li>
+                
+
+
+                            
+                            {% endif %}
+                            
+                        </ul>
+                #}
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-bs-toggle="dropdown">
+                            {# if app.user != null #}
+                            {% if app.user %}
+                                {# dump(app.user) #}
+                                <span>{{ app.user.email }}</span>
+                                <i class="bi bi-person-square"></i>
+                            {% else %}
+                                <span>Anonyme</span>
+                                <i class="bi bi-person-square"></i>
+                            {% endif %}
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">Profil</a></li>
+                            <li><a class="dropdown-item" href="{{ path('default')}}">Backoffice</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="{{ path('default')}}">Déconnexion</a></li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <a href="{{ path('default')}}" class="btn btn-danger me-2 connexion">Connexion</a>
+
+            </div>
+        </div>
+    </nav>
