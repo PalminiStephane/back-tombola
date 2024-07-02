@@ -3,12 +3,61 @@
 {% block title %}Gagne Tes Places{% endblock %}
 
 {% block body %}
-<div class="container">
-    <h1>Gagne Tes Places</h1>
-    <p class="lead">Bienvenue sur Gagne Tes Places, le site qui vous permet de gagner des places de l'OM en loge</p>
-    <img src="images/velodrome2.jpg" class="img-fluid" alt="tifo Orange Vélodrome">
-</div>
+        <!-- main -->
+    <div class="my-5 py-5 text-center">
+        <img src="favicon.png" height="100" alt="Logo Tombola" class="mb-3">
+        <h1 class="display-6 fw-bold">Gagne Tes Places</h1>
+        <div class="col-lg-6 mx-auto">
+            <p class="lead mb-4 text-muted">Bienvenue sur G T P, le site qui vous permet de gagner des places de l'OM en loge.</p>
+        </div>
+    </div>
 
+    <div class="container-xl bg-light p-5 border-top">
 
+        <div class="row mb-2">
 
+            <div class="col-12 col-lg-9">
+
+                <h2 class="text-muted fw-bold mb-4">Les prochaines Tombolas</h2>
+                {% for draw in draws %}
+                    <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm bg-white position-relative">
+                       <div class="col-4 movie__poster" style="background-image: url({{ draw.picture }});">
+                            <img src="images/poster-placeholder.png" class="img-fluid">
+                            <!-- img src="https://m.media-amazon.com/images/M/MV5BNThmZGY4NzgtMTM4OC00NzNkLWEwNmEtMjdhMGY5YTc1NDE4XkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_SX300.jpg" class="img-fluid" -->
+                        </div>
+                        <div class="col-8 p-4 d-flex flex-column position-static">
+                            <strong class="d-inline-block mb-2 text-primary">Tombola n°{{ draw.id }}</strong>
+                            <h3 class="mb-1">{{ draw.title }}</h3>
+                            <div class="mb-1 text-muted">Prix du ticket : {{ draw.ticketPrice }}€</div>
+                            <p><small>{{ draw.description }}</small>
+                            </p>
+                        
+                            {# https://symfony.com/doc/5.4/templates.html#templates-link-to-pages #}
+                            <a href="{{ path('app_home_show', {'id' : draw.id}) }}" class="fs-1 mt-3 text-danger align-self-start">
+                                <i class="bi bi-arrow-right-square"></i>
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <nav class="col-lg-9 offset-lg-3">
+                <ul class="pagination">
+                    <li class="page-item disabled">
+                        <a class="page-link">&laquo;</a>
+                    </li>
+                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item" aria-current="page">
+                        <a class="page-link" href="#">2</a>
+                    </li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">&raquo;</a>
+                    </li>
+                </ul>
+            </nav>
+
+        </div>
+
+    </div>
 {% endblock %}

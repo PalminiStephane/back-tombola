@@ -23,8 +23,8 @@ class AppFixtures extends Fixture
     public function load(ObjectManager $manager): void
     {
         $faker = Factory::create();
-        // Création de 4 tombolas
-        $drawTitles = ['Tombola 1', 'Tombola 2', 'Tombola 3', 'Tombola 4'];
+        // Création de 17 tombolas
+        $drawTitles = ['J2 – 25 août 2024 : OM – Reims', 'J4 – 15 septembre 2024 : OM – Nice', 'J7 – 6 octobre 2024 : OM – Angers', 'J9 – 27 octobre 2024 : OM – PSG', 'J11 – 10 novembre 2024 : OM – Auxerre', 'J13 – 1er décembre 2024 : OM – Monaco', 'J15 – 15 décembre 2024 : OM – Lille', 'J16 – 5 janvier 2025 : OM – Le Havre', 'J18 – 19 janvier 2025 : OM – Strasbourg', 'J20 – 2 février 2025 : OM – OL', 'J22 – 16 février 2025 : OM – St-Etienne', 'J24 – 2 mars 2025 : OM – Nantes', 'J25 – 9 mars 2025 : OM – Lens', 'J28 – 6 avril 2025 : OM – Toulouse', 'J30 – 20 avril 2025 : OM – Montpellier', 'J31 – 27 avril 2025 : OM – Brest', 'J34 – 18 mai 2025 : OM – Rennes'];
 
         foreach ($drawTitles as $index => $title) {
             $draw = new Draws();
@@ -36,6 +36,7 @@ class AppFixtures extends Fixture
             $draw->setTicketPrice(10.00); // Prix du ticket, à ajuster
             $draw->setTicketsAvailable(100); // Nombre de tickets disponibles, à ajuster
             $draw->setTotalTickets(200); // Nombre total de tickets, à ajuster
+            $draw->setPicture('https://logos-world.net/wp-content/uploads/2020/11/Olympique-de-Marseille-Logo.png'); // Image de la tombola logo l'om
             $manager->persist($draw);
 
             // Référencement des tirages pour être utilisés dans les fixtures des tickets

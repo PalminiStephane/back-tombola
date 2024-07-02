@@ -69,6 +69,11 @@ class Draws
      */
     private $winners;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $picture;
+
     public function __construct()
     {
         $this->tickets = new ArrayCollection();
@@ -213,6 +218,18 @@ class Draws
     public function setWinners(?string $winners): self
     {
         $this->winners = $winners;
+
+        return $this;
+    }
+
+    public function getPicture(): ?string
+    {
+        return $this->picture;
+    }
+
+    public function setPicture(?string $picture): self
+    {
+        $this->picture = $picture;
 
         return $this;
     }

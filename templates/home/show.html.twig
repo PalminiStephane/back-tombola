@@ -1,0 +1,41 @@
+{% extends "base.html.twig" %}
+
+{% block title %}{{ drawForView.title }}{% endblock %}
+
+{% block body %}
+        {# dump(drawForView) #}
+        <div class="container bg-lighttt pt-5">
+
+        <div class="row mb-2">
+
+            <div class="col">
+
+                <div
+                    class="row g-0 borderrr rrrounded overflow-hidden flex-md-row align-items-start mb-4 shadow-smmm position-relative">
+                    <div class="col-4 movie__poster img-thumbnail"
+                        style="background-image: url({{ drawForView.picture }});">
+                        <img src="{{ asset('images/poster-placeholder.png') }}" class="img-fluid">
+                        <!-- img src="https://m.media-amazon.com/images/M/MV5BNThmZGY4NzgtMTM4OC00NzNkLWEwNmEtMjdhMGY5YTc1NDE4XkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_SX300.jpg" class="img-fluid" -->
+                    </div>
+
+                    <div class="col-8 p-4 d-flex flex-column position-static bg-light">
+                        
+                        <strong class="d-inline-block mb-2 text-primary">{{ drawForView.status }}</strong>
+                        
+                        <h3 class="mb-1">{{ drawForView.title }} (id : {{ drawForView.id }})</h3>
+                        <div class="mb-1 text-muted">Prix du ticket : {{ drawForView.ticketPrice }} €</div>
+                        <p><small>{{ drawForView.description }}</small>
+                        </p>
+                        <div class="d-flex mb-4">
+                            <a href="{{ path('app_home') }}" class="btn btn-secondary">Retour à la liste</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+                          
+
+                        
+
+{% endblock %}
