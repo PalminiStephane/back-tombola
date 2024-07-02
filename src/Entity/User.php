@@ -40,22 +40,38 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(type="string", length=64)
      */
-    private $username;
+    private $name;
 
     /**
-     * @ORM\OneToMany(targetEntity=Ticket::class, mappedBy="user")
+     * @ORM\Column(type="date")
+     */
+    private $registrationDate;
+
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $lastLoginDate;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Tickets::class, mappedBy="user")
      */
     private $tickets;
 
     /**
-     * @ORM\OneToMany(targetEntity=Payment::class, mappedBy="user")
+     * @ORM\OneToMany(targetEntity=Transactions::class, mappedBy="user")
      */
-    private $payments;
+    private $transactions;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Notifications::class, mappedBy="user")
+     */
+    private $notifications;
 
     public function __construct()
     {
         $this->tickets = new ArrayCollection();
-        $this->payments = new ArrayCollection();
+        $this->transactions = new ArrayCollection();
+        $this->notifications = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -147,22 +163,51 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // $this->plainPassword = null;
     }
 
-    public function setUsername(string $username): self
+    public function getName(): ?string
     {
-        $this->username = $username;
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function getRegistrationDate(): ?\DateTimeInterface
+    {
+        return $this->registrationDate;
+    }
+
+    public function setRegistrationDate(\DateTimeInterface $registrationDate): self
+    {
+        $this->registrationDate = $registrationDate;
+
+        return $this;
+    }
+
+    public function getLastLoginDate(): ?\DateTimeInterface
+    {
+        return $this->lastLoginDate;
+    }
+
+    public function setLastLoginDate(?\DateTimeInterface $lastLoginDate): self
+    {
+        $this->lastLoginDate = $lastLoginDate;
 
         return $this;
     }
 
     /**
-     * @return Collection<int, Ticket>
+     * @return Collection<int, Tickets>
      */
     public function getTickets(): Collection
     {
         return $this->tickets;
     }
 
-    public function addTicket(Ticket $ticket): self
+    public function addTicket(Tickets $ticket): self
     {
         if (!$this->tickets->contains($ticket)) {
             $this->tickets[] = $ticket;
@@ -172,7 +217,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function removeTicket(Ticket $ticket): self
+    public function removeTicket(Tickets $ticket): self
     {
         if ($this->tickets->removeElement($ticket)) {
             // set the owning side to null (unless already changed)
@@ -185,29 +230,59 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection<int, Payment>
+     * @return Collection<int, Transactions>
      */
-    public function getPayments(): Collection
+    public function getTransactions(): Collection
     {
-        return $this->payments;
+        return $this->transactions;
     }
 
-    public function addPayment(Payment $payment): self
+    public function addTransaction(Transactions $transaction): self
     {
-        if (!$this->payments->contains($payment)) {
-            $this->payments[] = $payment;
-            $payment->setUser($this);
+        if (!$this->transactions->contains($transaction)) {
+            $this->transactions[] = $transaction;
+            $transaction->setUser($this);
         }
 
         return $this;
     }
 
-    public function removePayment(Payment $payment): self
+    public function removeTransaction(Transactions $transaction): self
     {
-        if ($this->payments->removeElement($payment)) {
+        if ($this->transactions->removeElement($transaction)) {
             // set the owning side to null (unless already changed)
-            if ($payment->getUser() === $this) {
-                $payment->setUser(null);
+            if ($transaction->getUser() === $this) {
+                $transaction->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Notifications>
+     */
+    public function getNotifications(): Collection
+    {
+        return $this->notifications;
+    }
+
+    public function addNotification(Notifications $notification): self
+    {
+        if (!$this->notifications->contains($notification)) {
+            $this->notifications[] = $notification;
+            $notification->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNotification(Notifications $notification): self
+    {
+        if ($this->notifications->removeElement($notification)) {
+            // set the owning side to null (unless already changed)
+            if ($notification->getUser() === $this) {
+                $notification->setUser(null);
             }
         }
 

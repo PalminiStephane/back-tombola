@@ -2,26 +2,26 @@
 
 namespace App\Repository;
 
-use App\Entity\Draw;
+use App\Entity\Draws;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Draw>
+ * @extends ServiceEntityRepository<Draws>
  *
- * @method Draw|null find($id, $lockMode = null, $lockVersion = null)
- * @method Draw|null findOneBy(array $criteria, array $orderBy = null)
- * @method Draw[]    findAll()
- * @method Draw[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Draws|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Draws|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Draws[]    findAll()
+ * @method Draws[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class DrawRepository extends ServiceEntityRepository
+class DrawsRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Draw::class);
+        parent::__construct($registry, Draws::class);
     }
 
-    public function add(Draw $entity, bool $flush = false): void
+    public function add(Draws $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
 
@@ -30,7 +30,7 @@ class DrawRepository extends ServiceEntityRepository
         }
     }
 
-    public function remove(Draw $entity, bool $flush = false): void
+    public function remove(Draws $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
 
@@ -40,7 +40,7 @@ class DrawRepository extends ServiceEntityRepository
     }
 
 //    /**
-//     * @return Draw[] Returns an array of Draw objects
+//     * @return Draws[] Returns an array of Draws objects
 //     */
 //    public function findByExampleField($value): array
 //    {
@@ -54,7 +54,7 @@ class DrawRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?Draw
+//    public function findOneBySomeField($value): ?Draws
 //    {
 //        return $this->createQueryBuilder('d')
 //            ->andWhere('d.exampleField = :val')

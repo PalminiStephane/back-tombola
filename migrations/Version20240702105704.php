@@ -1,0 +1,33 @@
+<?php
+
+declare(strict_types=1);
+
+namespace DoctrineMigrations;
+
+use Doctrine\DBAL\Schema\Schema;
+use Doctrine\Migrations\AbstractMigration;
+
+/**
+ * Auto-generated Migration: Please modify to your needs!
+ */
+final class Version20240702105704 extends AbstractMigration
+{
+    public function getDescription(): string
+    {
+        return '';
+    }
+
+    public function up(Schema $schema): void
+    {
+        // this up() migration is auto-generated, please modify it to your needs
+        $this->addSql('ALTER TABLE draws ADD ticket_validity_duration VARCHAR(255) DEFAULT NULL COMMENT \'(DC2Type:dateinterval)\', ADD winners LONGTEXT DEFAULT NULL');
+        $this->addSql('ALTER TABLE paiements ADD payment_method VARCHAR(64) DEFAULT NULL');
+    }
+
+    public function down(Schema $schema): void
+    {
+        // this down() migration is auto-generated, please modify it to your needs
+        $this->addSql('ALTER TABLE draws DROP ticket_validity_duration, DROP winners');
+        $this->addSql('ALTER TABLE paiements DROP payment_method');
+    }
+}

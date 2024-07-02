@@ -2,26 +2,26 @@
 
 namespace App\Repository;
 
-use App\Entity\Ticket;
+use App\Entity\Transactions;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Ticket>
+ * @extends ServiceEntityRepository<Transactions>
  *
- * @method Ticket|null find($id, $lockMode = null, $lockVersion = null)
- * @method Ticket|null findOneBy(array $criteria, array $orderBy = null)
- * @method Ticket[]    findAll()
- * @method Ticket[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Transactions|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Transactions|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Transactions[]    findAll()
+ * @method Transactions[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class TicketRepository extends ServiceEntityRepository
+class TransactionsRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Ticket::class);
+        parent::__construct($registry, Transactions::class);
     }
 
-    public function add(Ticket $entity, bool $flush = false): void
+    public function add(Transactions $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
 
@@ -30,7 +30,7 @@ class TicketRepository extends ServiceEntityRepository
         }
     }
 
-    public function remove(Ticket $entity, bool $flush = false): void
+    public function remove(Transactions $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
 
@@ -40,7 +40,7 @@ class TicketRepository extends ServiceEntityRepository
     }
 
 //    /**
-//     * @return Ticket[] Returns an array of Ticket objects
+//     * @return Transactions[] Returns an array of Transactions objects
 //     */
 //    public function findByExampleField($value): array
 //    {
@@ -54,7 +54,7 @@ class TicketRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?Ticket
+//    public function findOneBySomeField($value): ?Transactions
 //    {
 //        return $this->createQueryBuilder('t')
 //            ->andWhere('t.exampleField = :val')
