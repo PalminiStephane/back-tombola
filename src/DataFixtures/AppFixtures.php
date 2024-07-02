@@ -44,6 +44,16 @@ class AppFixtures extends Fixture
         }
         $manager->flush();
 
+        //Création d'un administrateur
+        $admin = new User();
+        $admin->setName('admin');
+        $admin->setEmail('po@po.fr');
+        $pwa = $this->passwordhasher->hashPassword($admin, "admin");
+        $admin->setPassword($pwa);
+        $admin->setRegistrationDate($faker->dateTimeBetween('-1 year', 'now'));
+        $admin->setRoles(["ROLE_ADMIN"]);
+        $manager->persist($admin);
+        
         // Création de 100 utilisateurs
         for ($i = 0; $i < 100; $i++) {
             $user = new User();
