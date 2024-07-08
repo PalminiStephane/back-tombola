@@ -34,9 +34,19 @@
             </label>
         </div>
     #}
-
+<div class="text-center m-4">
     <button class="btn btn-lg btn-primary mt-2 " type="submit">
         Connecter
     </button>
+</div>
 </form>
+<hr>
+{#
+    Boutton pour s'incrire
+#}
+<div class="text-center mb-4">
+    <h4>Nouveau chez GTP ?</h4>
+    <a href="{{ path('app_register') }}" class="btn btn-lg btn-outline-primary mt-2">Créer votre compte GTP</a>
+</div>
+
 {% endblock %}
