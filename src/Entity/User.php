@@ -67,6 +67,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $notifications;
 
+    // Ajoutez une propriété non mappée pour stocker le mot de passe en clair
+    private $plainPassword;
+
     public function __construct()
     {
         $this->tickets = new ArrayCollection();
@@ -288,4 +291,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    public function getPlainPassword(): ?string
+    {
+        return $this->plainPassword;
+    }
+
+    public function setPlainPassword(string $plainPassword): self
+    {
+        $this->plainPassword = $plainPassword;
+
+        return $this;
+    }
+
+    
 }
