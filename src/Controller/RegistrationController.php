@@ -4,14 +4,14 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\RegistrationFormType;
+use App\Security\TombolaAuthenticator;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use App\Security\TombolaAuthenticator;
+use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 
 class RegistrationController extends AbstractController
 {
@@ -40,19 +40,22 @@ class RegistrationController extends AbstractController
             // Rôle par défaut
             $user->setRoles(['ROLE_USER']);
 
+            try {
+                $entityManager->persist($user);
+                $entityManager->flush();
 
-            $entityManager->persist($user);
-            $entityManager->flush();
 
-
-            // Connexion automatique après inscription
-            return $userAuthenticator->authenticateUser(
-                $user,
-                $authentificate,
-                $request
-            );
+                // Connexion automatique après inscription
+                return $userAuthenticator->authenticateUser(
+                    $user,
+                    $authentificate,
+                    $request
+                );
+            } catch (\Doctrine\DBAL\Exception\UniqueConstraintViolationException $e) {
+                $this->addFlash('error', 'Une erreur est survenue lors de l\'inscription');
+            }
         }
-
+        
         return $this->render('registration/index.html.twig', [
             'registrationForm' => $form->createView(),
         ]);

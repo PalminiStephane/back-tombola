@@ -13,4 +13,11 @@
     {{ form_row(registrationForm.plainPassword.second) }}
     {{ form_row(registrationForm.register) }}
 {{ form_end(registrationForm) }}
+
+{% for message in app.flashes('error') %}
+    <div class="alert alert-danger">
+        {{ message }}
+    </div>
+{% endfor %}
+
 {% endblock %}
