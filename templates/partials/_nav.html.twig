@@ -21,77 +21,6 @@
                         <a class="nav-link" href="{{ path('app_about')}}"><i class="bi bi-info-circle"></i> A propos</a>
                     </li>
                 </ul>
-                {# Dylan
-                {% if app.user == null %}
-				<span>User</span>
-				<a href="{{ path('app_login')}}" class="btn btn-danger me-2">Connexion</a>
-			{% else %}
-				<ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-					<li class="nav-item dropdown">
-						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
-							<span>{{ app.user.email }}</span>
-							<i class="bi bi-person-square"></i>
-						</a>
-						<ul class="dropdown-menu">
-							<li>
-								<a class="dropdown-item" href="#">{{app.user.roles[0]}}</a>
-								
-							</li>
-
-
-							
-							<li>
-								<a class="dropdown-item" href="{{ path('app_backoffice_dashboard') }}">Backoffice</a>
-							</li>
-
-
-
-
-							<li>
-								<hr class="dropdown-divider">
-							</li>
-							<li>
-								<a class="dropdown-item" href="{{ path('app_logout')}}">Déconnexion</a>
-							</li>
-						</ul>
-					</li>
-				</ul>
-			{% endif %}
-                #}
-                {# Julien
-                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                    <li class="nav-item dropdown">
-                        
-                             {% dump(app.user)%}
-                             {% if app.user %}
-                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                            data-bs-toggle="dropdown">
-                            <span>{{ app.user.email}}</span>
-                            <i class="bi bi-person-square"></i>
-
-
-                            </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Profil</a></li>
-                            <li><a class="dropdown-item" href="{{ path('app_backoffice') }}">Backoffice</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item" href="{{ path('app_logout')}}">Déconnexion</a></li>
-                        </ul>
-                            {% else %}
-
-
-                            <a href="{{ path('app_login')}}" class="btn btn-danger me-2">Connexion</a>
-                             </li>
-                
-
-
-                            
-                            {% endif %}
-                            
-                        </ul>
-                #}
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
@@ -112,12 +41,12 @@
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
-                            <li><a class="dropdown-item" href="{{ path('default')}}">Déconnexion</a></li>
+                            <li><a class="dropdown-item" href="{{ path('app_logout')}}">Déconnexion</a></li>
                         </ul>
                     </li>
                 </ul>
 
-                <a href="{{ path('default')}}" class="btn btn-danger me-2 connexion">Connexion</a>
+                <a href="{{ path('app_login')}}" class="btn btn-danger me-2 connexion">Connexion</a>
 
             </div>
         </div>
