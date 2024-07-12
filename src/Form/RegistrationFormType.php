@@ -39,8 +39,12 @@ class RegistrationFormType extends AbstractType
                 ],
             ])
             ->add('plainPassword', RepeatedType::class, [
+                
                 'type' => PasswordType::class,
                 'first_options' => [
+                    'attr' => [
+                        'placeholder' => 'Un email de confirmation vous sera envoyé',
+                    ],
                     'label' => 'Mot de passe',
                 ],
                 'second_options' => [
