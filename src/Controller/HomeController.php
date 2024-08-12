@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Draws;
 use App\Repository\DrawsRepository;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -14,15 +16,22 @@ class HomeController extends AbstractController
      * @Route("/", name="default")
      * @Route("/home", name="app_home")
      */
-    public function index(DrawsRepository $drawsRepository): Response
-    {
-        // J'ai besoin de la liste des tombolas pour les afficher sur la page d'accueil
-        $draws = $drawsRepository->findBy(['status' => 'open'], ['drawDate' => 'ASC']);
-
-        return $this->render('home/index.html.twig', [
-            'draws' => $draws,
-        ]);
-    }
+    public function index(Request $request, DrawsRepository $drawsRepository, PaginatorInterface $paginator): Response
+        {
+            // Récupération de la requête de tous les tirages ouverts triés par date de tirage
+            $queryBuilder = $drawsRepository->findByQueryBuilder(['status' => 'open'], ['drawDate' => 'ASC']);
+    
+            // Utilisation du paginator pour diviser les résultats en pages
+            $draws = $paginator->paginate(
+                $queryBuilder, // La requête et non le résultat
+                $request->query->getInt('page', 1), // numéro de page, 1 par défaut
+                5 // nombre d'éléments par page
+            );
+    
+            return $this->render('home/index.html.twig', [
+                'draws' => $draws,
+            ]);
+        }
 
     /**
      * @Route("/contact", name="app_contact")
@@ -41,7 +50,7 @@ class HomeController extends AbstractController
     }
 
     /**
-     * @Route("/draws/{id}", name="app_home_show", requirements={"id"="\d+"})
+     * @Route("/draws/{id}", name="app_tombola_show", requirements={"id"="\d+"})
      * @return Response
      */
     public function show($id, DrawsRepository $drawsRepository): Response

@@ -34,12 +34,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(type="boolean")
      */
-    private $isEmailVerified = false;
+    private $isEmailVerified = false; // Ajouté pour la vérification de l'email
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $emailVerificationToken;
+    private $emailVerificationToken; // Ajouté pour stocker le jeton de confirmation
 
     /**
      * @ORM\Column(type="json")
@@ -202,7 +202,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function eraseCredentials()
     {
         // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
+        $this->plainPassword = null;
     }
 
     public function getName(): ?string
@@ -342,6 +342,4 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
-
-    
 }

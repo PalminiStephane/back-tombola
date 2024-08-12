@@ -14,6 +14,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class RegistrationController extends AbstractController
 {
@@ -32,14 +33,14 @@ class RegistrationController extends AbstractController
      * Page d'inscription
      * @Route("/register", name="app_register", methods={"GET", "POST"})
      */
-    public function register(Request $request, UserPasswordHasherInterface $passwordHasher, EntityManagerInterface $entityManager): Response
+    public function register(Request $request, UserPasswordHasherInterface $passwordHasher, EntityManagerInterface $entityManager, ValidatorInterface $validator): Response
     {
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Encodage du mot de passe
+            // Encoding the password
             $user->setPassword(
                 $passwordHasher->hashPassword(
                     $user,
@@ -47,50 +48,79 @@ class RegistrationController extends AbstractController
                 )
             );
 
-            // Génération du token de vérification de l'email
+            // Generating email verification token
             $token = bin2hex(random_bytes(32));
             $user->setEmailVerificationToken($token);
 
-            // Enregistrement de la date d'inscription
+            // Setting the registration date
             $user->setRegistrationDate(new \DateTime());
 
-            // Rôle par défaut
+            // Setting default role
             $user->setRoles(['ROLE_USER']);
 
+            // Validate user data before persisting
+            $errors = $validator->validate($user);
+            if (count($errors) > 0) {
+                foreach ($errors as $error) {
+                    $this->addFlash('error', $error->getMessage());
+                }
+                return $this->redirectToRoute('app_register');
+            }
+
+            // Registering the new user
             try {
+                $entityManager->beginTransaction();
                 $entityManager->persist($user);
                 $entityManager->flush();
+                $entityManager->commit();
 
-                // Génération du lien de vérification de l'email
-                $signatureComponents = $this->verifyEmailHelper->generateSignature(
-                    'app_verify_email',
-                    $user->getId(),
-                    $user->getEmail(),
-                    ['token' => $token]
-                );
-
-                $verificationLink = $signatureComponents->getSignedUrl();
-
-                // Envoi de l'email de vérification
-                $email = (new Email())
-                    ->from('noreply@yourdomain.com')
-                    ->to($user->getEmail())
-                    ->subject('Vérification de votre adresse email')
-                    ->html('<p>S\'il vous plaît cliquez sur le lien suivant pour vérifier votre adresse email: <a href="' . $verificationLink . '">Vérifier mon email</a></p>');
-
-                $this->mailer->send($email);
-
-                $this->addFlash('success', 'Votre compte a été créé avec succès. Un email de vérification vous a été envoyé.');
+                // Sending verification email
+                $this->sendVerificationEmail($user);
 
                 return $this->redirectToRoute('app_login');
-            } catch (\Doctrine\DBAL\Exception\UniqueConstraintViolationException $e) {
-                $this->addFlash('error', 'Une erreur est survenue lors de l\'inscription');
+            } catch (\Exception $e) {
+                $this->logger->error('Error during registration or email sending: ' . $e->getMessage());
+                $entityManager->rollback();
+                $this->addFlash('error', 'An error occurred during registration. Please try again.');
             }
         }
 
         return $this->render('registration/index.html.twig', [
             'registrationForm' => $form->createView(),
         ]);
+    }
+
+    /**
+     * Sends the verification email to the user.
+     */
+    private function sendVerificationEmail(User $user): void
+    {
+        $signatureComponents = $this->verifyEmailHelper->generateSignature(
+            'app_verify_email',
+            $user->getId(),
+            $user->getEmail(),
+            ['token' => $user->getEmailVerificationToken()]
+        );
+
+        $verificationLink = $signatureComponents->getSignedUrl();
+
+        $email = (new Email())
+            ->from('noreply@yourdomain.com')
+            ->to($user->getEmail())
+            ->subject('Vérification de votre adresse email')
+            ->html($this->renderView(
+                'emails/verification.html.twig',
+                ['verification_link' => $verificationLink]
+            ));
+
+        try {
+            $this->mailer->send($email);
+            $this->addFlash('success', 'A verification email has been sent to you.');
+        } catch (\Exception $e) {
+            $this->logger->error('Failed to send verification email: ' . $e->getMessage());
+            $this->addFlash('error', 'Failed to send the verification email.');
+            throw new \RuntimeException('Failed to send verification email.');
+        }
     }
 
     /**
@@ -102,50 +132,29 @@ class RegistrationController extends AbstractController
         $token = $request->get('token');
 
         if (null === $id || null === $token) {
+            $this->addFlash('error', 'Invalid verification link.');
             return $this->redirectToRoute('app_register');
         }
-
-        $user = $entityManager->getRepository(User::class)->find($id);
-
-        if (null === $user) {
-            return $this->redirectToRoute('app_register');
-        }
-
-        // Verify the token
-        if ($user->getEmailVerificationToken() === $token) {
-            $user->setIsEmailVerified(true);
-            $user->setEmailVerificationToken(null);
-            $entityManager->persist($user);
-            $entityManager->flush();
-
-            $this->addFlash('success', 'Votre adresse email a été vérifiée avec succès.');
-
-            return $this->redirectToRoute('app_login');
-        }
-
-        $this->addFlash('error', 'Une erreur est survenue lors de la vérification de votre adresse email.');
-
-        return $this->redirectToRoute('app_register');
     }
-    /**
-     * @Route("/test-email", name="test_email")
+
+     /**
+     * @Route("/test-send-email", name="test_send_email")
      */
-    public function testEmail(MailerInterface $mailer): Response
+    public function testSendEmail(MailerInterface $mailer): Response
     {
         $email = (new Email())
-            ->from('palministephane@gmail.com')
-            ->to('lofax59792@cartep.com')  // adresse e-mail de test
-            ->subject('Test Email')
-            ->html('<p>This is a test email.</p>');
+            ->from('stefax@live.fr')  // Assurez-vous que cette adresse est vérifiée dans votre compte SES
+            ->to('palministephane@gmail.com')   // Adresse de test
+            ->subject('Test Email from Symfony via SES')
+            ->html('<p>This is a test email to confirm SES integration.</p>');
 
-            try {
-                $this->logger->info('Attempting to send email...');
-                $mailer->send($email);
-                $this->logger->info('Email sent successfully.');
-                return new Response('Email sent!');
-            } catch (\Exception $e) {
-                $this->logger->error('Email not sent: '.$e->getMessage());
-                return new Response('Email not sent: '.$e->getMessage());
-            }
+        try {
+            $mailer->send($email);
+            $this->addFlash('success', 'Email sent successfully!');
+        } catch (\Exception $e) {
+            $this->addFlash('error', 'Failed to send email: ' . $e->getMessage());
         }
- }
+
+        return $this->redirectToRoute('app_register');  // Redirigez vers la page que vous voulez après le test
+    }
+}
