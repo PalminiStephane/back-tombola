@@ -5,13 +5,22 @@
 {% block body %}
     <!-- Main content area -->
     <div class="my-5 py-5 text-center">
-        <img src="{{ asset('images/favicon.png') }}" height="100" alt="Logo Tombola" class="mb-3">
+        <img src="{{ asset('favicon.png') }}" height="100" alt="Logo Tombola" class="mb-3">
         <h1 class="display-6 fw-bold">Gagne Tes Places</h1>
         <p class="lead mb-4 text-muted">Participez à nos tombolas et gagnez des places pour voir l'OM jouer!</p>
     </div>
 
     <div class="container-xl bg-light p-5 border-top">
         <h2 class="text-muted fw-bold mb-4">Prochaines Tombolas</h2>
+        
+        {# Afficher les informations du dernier gagnant #}
+        {% if lastWinner %}
+            <div class="alert alert-info">
+                <h4>Dernier gagnant : {{ lastWinner.winnerName }}</h4>
+                <p>Lot remporté : {{ lastWinner.prize }}</p>
+            </div>
+        {% endif %}
+
         {% for draw in draws %}
             <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm bg-white position-relative">
                 <div class="col-md-4 p-0">
@@ -28,6 +37,18 @@
         {% endfor %}
 
         <!-- Pagination -->
-        {{ knp_pagination_render(draws) }}
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+                <li class="page-item disabled">
+                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true">&laquo; Précédent</a>
+                </li>
+                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item">
+                    <a class="page-link" href="#">Suivant &raquo;</a>
+                </li>
+            </ul>
+        </nav>
     </div>
 {% endblock %}

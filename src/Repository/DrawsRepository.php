@@ -36,6 +36,43 @@ class DrawsRepository extends ServiceEntityRepository
         return $qb;
     }
 
+     /**
+     * Récupère les tombolas ouvertes qui n'ont pas encore passé la date limite d'inscription
+     */
+    public function findOpenDraws()
+    {
+        $qb = $this->createQueryBuilder('d')
+            ->where('d.status = :status')
+            ->andWhere('d.drawDate > :now')
+            ->andWhere('d.drawDate > :limitDate')
+            ->setParameter('status', 'open')
+            ->setParameter('now', new \DateTime())
+            ->setParameter('limitDate', new \DateTime('+1 day'))
+            ->orderBy('d.drawDate', 'ASC');
+
+        return $qb->getQuery()->getResult();
+    }
+
+      /**
+     * Trouver les tombolas qui nécessitent un tirage au sort
+     *
+     * @return Draws[]
+     */
+    public function findDrawsToExecute(): array
+    {
+        $today = new \DateTime();
+        $today->modify('+1 day'); // La limite pour s'inscrire est de 1 jour avant l'évènement
+
+        return $this->createQueryBuilder('d')
+            ->where('d.status = :status')
+            ->andWhere('d.drawDate <= :date')
+            ->setParameter('status', 'open')
+            ->setParameter('date', $today)
+            ->orderBy('d.drawDate', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
     public function add(Draws $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);

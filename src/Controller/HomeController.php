@@ -17,21 +17,35 @@ class HomeController extends AbstractController
      * @Route("/home", name="app_home")
      */
     public function index(Request $request, DrawsRepository $drawsRepository, PaginatorInterface $paginator): Response
-        {
-            // Récupération de la requête de tous les tirages ouverts triés par date de tirage
-            $queryBuilder = $drawsRepository->findByQueryBuilder(['status' => 'open'], ['drawDate' => 'ASC']);
-    
-            // Utilisation du paginator pour diviser les résultats en pages
-            $draws = $paginator->paginate(
-                $queryBuilder, // La requête et non le résultat
-                $request->query->getInt('page', 1), // numéro de page, 1 par défaut
-                5 // nombre d'éléments par page
-            );
-    
-            return $this->render('home/index.html.twig', [
-                'draws' => $draws,
-            ]);
+    {
+        // Récupère les tombolas ouvertes et non passées, triées par date de tirage
+        $query = $drawsRepository->findOpenDraws();
+
+        // Pagination des résultats
+        $draws = $paginator->paginate(
+            $query, // query NOT result
+            $request->query->getInt('page', 1), // Numéro de la page actuelle, 1 par défaut
+            5 // Limit par page
+        );
+
+        // Récupérer la dernière tombola fermée (c'est-à-dire dont le statut est "closed")
+        $lastDraw = $drawsRepository->findOneBy(['status' => 'closed'], ['drawDate' => 'DESC']);
+
+        // Initialiser la variable du dernier gagnant et du lot
+        $lastWinner = null;
+
+        if ($lastDraw) {
+            $lastWinner = [
+                'winnerName' => $lastDraw->getWinnerName(),
+                'prize' => $lastDraw->getPrize()
+            ];
         }
+
+        return $this->render('home/index.html.twig', [
+            'draws' => $draws,
+            'lastWinner' => $lastWinner,
+        ]);
+    }
 
     /**
      * @Route("/contact", name="app_contact")
@@ -41,7 +55,7 @@ class HomeController extends AbstractController
         return $this->render('home/contact.html.twig');
     }
 
-    /**
+      /**
      * @Route("/about", name="app_about")
      */
     public function about(): Response
@@ -64,4 +78,4 @@ class HomeController extends AbstractController
             'drawForView' => $draw,
         ]);
     }
-}
+} 

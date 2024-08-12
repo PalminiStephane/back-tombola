@@ -69,6 +69,16 @@ class Draws
      */
     private $winners;
 
+     /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $winnerName;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $prize;
+
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
@@ -221,6 +231,31 @@ class Draws
 
         return $this;
     }
+
+    public function getWinnerName(): ?string
+    {
+        return $this->winnerName;
+    }
+
+    public function setWinnerName(?string $winnerName): self
+    {
+        $this->winnerName = $winnerName;
+
+        return $this;
+    }
+
+    public function getPrize(): ?string
+    {
+        return $this->prize;
+    }
+
+    public function setPrize(?string $prize): self
+    {
+        $this->prize = $prize;
+
+        return $this;
+    }
+
 
     public function getPicture(): ?string
     {
