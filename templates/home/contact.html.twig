@@ -1,3 +1,5 @@
+{# templates/contact/index.html.twig #}
+
 {% extends 'base.html.twig' %}
 
 {% block title %}Contact{% endblock %}
@@ -6,6 +8,14 @@
     <div class="container my-5">
         <h1>Contactez-nous</h1>
 
+        {# Afficher les messages flash si présents #}
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+
+        {# Formulaire de contact #}
         {{ form_start(contactForm) }}
             <div class="mb-3">
                 {{ form_label(contactForm.name) }}

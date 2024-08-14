@@ -61,23 +61,22 @@ class HomeController extends AbstractController
     public function contact(Request $request, MailerInterface $mailer): Response
     {
         $form = $this->createForm(ContactType::class);
-
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
             $contactData = $form->getData();
 
-            // Créer l'email
+            // Créer et envoyer l'email
             $email = (new Email())
                 ->from($contactData['email'])
-                ->to('votre-email@example.com') // Remplacez par votre adresse email
+                ->to('palministephane@gmail.com') // Remplacez par votre adresse email
                 ->subject($contactData['subject'])
                 ->text($contactData['message']);
 
-            // Envoyer l'email
             $mailer->send($email);
 
             // Ajouter un message flash pour informer l'utilisateur
-            $this->addFlash('success', 'Votre message a été envoyé avec succès.');
+            $this->addFlash('success', 'Votre message a bien été envoyé.');
 
             // Rediriger vers la même page pour réinitialiser le formulaire
             return $this->redirectToRoute('app_contact');
