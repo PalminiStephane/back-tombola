@@ -85,11 +85,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     // Ajoutez une propriété non mappée pour stocker le mot de passe en clair
     private $plainPassword;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Purchase::class, mappedBy="user")
+     */
+    private $purchases;
+
     public function __construct()
     {
         $this->tickets = new ArrayCollection();
         $this->transactions = new ArrayCollection();
         $this->notifications = new ArrayCollection();
+        $this->purchases = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -339,6 +345,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPlainPassword(string $plainPassword): self
     {
         $this->plainPassword = $plainPassword;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Purchase>
+     */
+    public function getPurchases(): Collection
+    {
+        return $this->purchases;
+    }
+
+    public function addPurchase(Purchase $purchase): self
+    {
+        if (!$this->purchases->contains($purchase)) {
+            $this->purchases[] = $purchase;
+            $purchase->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removePurchase(Purchase $purchase): self
+    {
+        if ($this->purchases->removeElement($purchase)) {
+            // set the owning side to null (unless already changed)
+            if ($purchase->getUser() === $this) {
+                $purchase->setUser(null);
+            }
+        }
 
         return $this;
     }

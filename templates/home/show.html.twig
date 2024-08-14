@@ -7,10 +7,10 @@
         <div class="row mb-2">
             <div class="col">
                 <div class="row g-0 border rounded overflow-hidden flex-md-row align-items-start mb-4 shadow-sm position-relative">
-                    <div class="col-4 movie__poster img-thumbnail" style="background-image: url({{ drawForView.picture ?: asset('images/poster-placeholder.png') }});">
-                        <img src="{{ asset('images/poster-placeholder.png') }}" class="img-fluid" alt="Poster">
+                    <div class="col-12 col-md-4 movie__poster img-thumbnail">
+                        <img src="{{ '/' ~ drawForView.picture ?: asset('images/poster-placeholder.png') }}" class="img-fluid" style="object-fit: cover; width: 100%; height: auto;" alt="{{ drawForView.title }}">
                     </div>
-                    <div class="col-8 p-4 d-flex flex-column position-static bg-light">
+                    <div class="col-12 col-md-8 p-4 d-flex flex-column position-static bg-light">
                         <strong class="d-inline-block mb-2 text-primary">{{ drawForView.status }}</strong>
                         <h3 class="mb-1">{{ drawForView.title }} (id : {{ drawForView.id }})</h3>
                         <div class="mb-1 text-muted">Prix du ticket : {{ drawForView.ticketPrice }} €</div>
@@ -18,13 +18,14 @@
 
                         {# Formulaire pour acheter un ticket #}
                         {% if drawForView.status == 'open' %}
-                            <form method="post" action="{{ path('app_buy_ticket', {'id': drawForView.id}) }}">
+                            {{ form_start(form) }}
                                 <div class="form-group mb-3">
-                                    <label for="quantity">Nombre de tickets :</label>
-                                    <input type="number" id="quantity" name="quantity" value="1" min="1" max="{{ drawForView.ticketsAvailable }}" class="form-control">
+                                    {{ form_label(form.quantity) }}
+                                    {{ form_widget(form.quantity) }}
+                                    {{ form_errors(form.quantity) }}
                                 </div>
                                 <button type="submit" class="btn btn-success">Acheter</button>
-                            </form>
+                            {{ form_end(form) }}
                         {% else %}
                             <p class="text-danger">Les ventes de tickets sont fermées pour cette tombola.</p>
                         {% endif %}

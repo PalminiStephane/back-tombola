@@ -1,14 +1,59 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}A propos{% endblock %}
+{% block title %}À propos de Gagne Tes Places{% endblock %}
 
 {% block body %}
-<div class="container">
-    <h1>A propos</h1>
-    <h2> Gagne Tes Places</h2>
-    <p class="lead">Bienvenue sur Gagne Tes Places, le site qui vous permet de gagner des places de l'OM en loge</p>
-</div>
+    <div class="container my-5 py-5">
+        <h1 class="display-6 fw-bold text-center">À propos de Gagne Tes Places</h1>
+        
+        <div class="row mt-5">
+            <div class="col-md-6">
+                <h2 class="fw-bold">Notre Mission</h2>
+                <p>
+                    "Gagne Tes Places" est une initiative du club de judo local pour organiser des tombolas permettant aux participants de gagner des places pour assister aux matchs de l'Olympique de Marseille. Tous les bénéfices de ces événements sont destinés à financer un voyage au Japon pour les membres du club, où ils auront l'occasion de découvrir les origines de leur sport.
+                </p>
+            </div>
+            <div class="col-md-6">
+                <img src="{{ asset('images/judo-japan.jpg') }}" class="img-fluid rounded" alt="Voyage au Japon">
+            </div>
+        </div>
 
+        <div class="row mt-5">
+            <div class="col-md-6 order-md-2">
+                <h2 class="fw-bold">Pourquoi le Japon ?</h2>
+                <p>
+                    Le Japon est le berceau du judo, un art martial riche en histoire et en traditions. Pour nos judokas, ce voyage est plus qu'une simple excursion touristique; c'est une opportunité unique de s'imprégner de la culture japonaise, d'améliorer leur technique, et de rendre hommage aux racines de leur discipline.
+                </p>
+            </div>
+            <div class="col-md-6 order-md-1">
+                <img src="{{ asset('images/judo-dojo.jpg') }}" class="img-fluid rounded" alt="Dojo au Japon">
+            </div>
+        </div>
 
+        <div class="row mt-5">
+            <div class="col-md-6">
+                <h2 class="fw-bold">Le Club de Judo</h2>
+                <p>
+                    Fondé il y a plus de 20 ans, notre club de judo accueille des passionnés de tous âges et de tous niveaux. Nous croyons fermement que le judo est plus qu'un sport; c'est une école de vie qui enseigne des valeurs telles que le respect, la persévérance, et l'humilité.
+                </p>
+            </div>
+            <div class="col-md-6">
+                <img src="{{ asset('images/judo-club.jpg') }}" class="img-fluid rounded" alt="Club de judo">
+            </div>
+        </div>
 
+        <div class="row mt-5">
+            <div class="col-md-12 text-center">
+                <h2 class="fw-bold">Comment Participer ?</h2>
+                <p>
+                    Participer à notre tombola est simple ! Rendez-vous sur la page d'accueil, choisissez la tombola qui vous intéresse, et achetez vos tickets en ligne. Chaque ticket acheté est une chance de gagner et une contribution directe au financement du voyage de nos judokas au Japon.
+                </p>
+            </div>
+        </div>
+         <div class="row mt-5">
+            <div class="col-md-12 text-center">
+                <a href="{{ path('app_home') }}" class="btn btn-primary">Retour au jeu</a>
+            </div>
+        </div>
+    </div>
 {% endblock %}

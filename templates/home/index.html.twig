@@ -7,7 +7,12 @@
     <div class="my-5 py-5 text-center">
         <img src="{{ asset('favicon.png') }}" height="100" alt="Logo Tombola" class="mb-3">
         <h1 class="display-6 fw-bold">Gagne Tes Places</h1>
-        <p class="lead mb-4 text-muted">Participez à nos tombolas et gagnez des places pour voir l'OM jouer!</p>
+        <p class="lead mb-4 text-muted">
+            Participez à nos tombolas et gagnez des places pour voir l'OM jouer!
+        </p>
+        <p class="lead text-muted">
+            Tous les bénéfices de cette tombola permettront aux adhérents du club de judo de partir au Japon pour découvrir les origines de leur sport. Votre participation contribuera à réaliser ce rêve pour nos judokas passionnés.
+        </p>
     </div>
 
     <div class="container-xl bg-light p-5 border-top">
@@ -24,7 +29,7 @@
         {% for draw in draws %}
             <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm bg-white position-relative">
                 <div class="col-md-4 p-0">
-                    <img src="{{ draw.picture ?: asset('images/poster-placeholder.png') }}" alt="{{ draw.title }} Poster" class="img-fluid w-100 h-100">
+                    <img src="{{ draw.picture ?: asset('images/poster-placeholder.png') }}" alt="{{ draw.title }} Poster" class="img-fluid w-100 h-100" style="object-fit: cover;">
                 </div>
                 <div class="col-md-8 p-4 d-flex flex-column position-static">
                     <strong class="d-inline-block mb-2 text-primary">Tombola n°{{ draw.id }}</strong>
@@ -39,15 +44,31 @@
         <!-- Pagination -->
         <nav aria-label="Page navigation example">
             <ul class="pagination justify-content-center">
-                <li class="page-item disabled">
-                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true">&laquo; Précédent</a>
-                </li>
-                <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item">
-                    <a class="page-link" href="#">Suivant &raquo;</a>
-                </li>
+                {% if draws.currentPageNumber > 1 %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ path(app.request.get('_route'), app.request.get('_route_params')|merge({'page': draws.currentPageNumber - 1})) }}" aria-label="Précédent">&laquo; Précédent</a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" tabindex="-1" aria-disabled="true">&laquo; Précédent</a>
+                    </li>
+                {% endif %}
+
+                {% for page in 1..draws.pageCount %}
+                    <li class="page-item {% if page == draws.currentPageNumber %}active{% endif %}">
+                        <a class="page-link" href="{{ path(app.request.get('_route'), app.request.get('_route_params')|merge({'page': page})) }}">{{ page }}</a>
+                    </li>
+                {% endfor %}
+
+                {% if draws.currentPageNumber < draws.pageCount %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ path(app.request.get('_route'), app.request.get('_route_params')|merge({'page': draws.currentPageNumber + 1})) }}" aria-label="Suivant">Suivant &raquo;</a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Suivant &raquo;</a>
+                    </li>
+                {% endif %}
             </ul>
         </nav>
     </div>

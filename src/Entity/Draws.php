@@ -84,9 +84,15 @@ class Draws
      */
     private $picture;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Purchase::class, mappedBy="draw")
+     */
+    private $purchases;
+
     public function __construct()
     {
         $this->tickets = new ArrayCollection();
+        $this->purchases = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -265,6 +271,36 @@ class Draws
     public function setPicture(?string $picture): self
     {
         $this->picture = $picture;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Purchase>
+     */
+    public function getPurchases(): Collection
+    {
+        return $this->purchases;
+    }
+
+    public function addPurchase(Purchase $purchase): self
+    {
+        if (!$this->purchases->contains($purchase)) {
+            $this->purchases[] = $purchase;
+            $purchase->setDraw($this);
+        }
+
+        return $this;
+    }
+
+    public function removePurchase(Purchase $purchase): self
+    {
+        if ($this->purchases->removeElement($purchase)) {
+            // set the owning side to null (unless already changed)
+            if ($purchase->getDraw() === $this) {
+                $purchase->setDraw(null);
+            }
+        }
 
         return $this;
     }
