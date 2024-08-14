@@ -3,12 +3,29 @@
 {% block title %}Contact{% endblock %}
 
 {% block body %}
-<div class="container">
-    <h1>Contact</h1>
-    <h2> Gagne Tes Places</h2>
-    <p class="lead">Bienvenue sur Gagne Tes Places, le site qui vous permet de gagner des places de l'OM en loge</p>
-</div>
+    <div class="container my-5">
+        <h1>Contactez-nous</h1>
 
-
-
+        {{ form_start(contactForm) }}
+            <div class="mb-3">
+                {{ form_label(contactForm.name) }}
+                {{ form_widget(contactForm.name, {'attr': {'class': 'form-control'}}) }}
+            </div>
+            <div class="mb-3">
+                {{ form_label(contactForm.email) }}
+                {{ form_widget(contactForm.email, {'attr': {'class': 'form-control'}}) }}
+            </div>
+            <div class="mb-3">
+                {{ form_label(contactForm.subject) }}
+                {{ form_widget(contactForm.subject, {'attr': {'class': 'form-control'}}) }}
+            </div>
+            <div class="mb-3">
+                {{ form_label(contactForm.message) }}
+                {{ form_widget(contactForm.message, {'attr': {'class': 'form-control', 'rows': '5'}}) }}
+            </div>
+            <div>
+                {{ form_widget(contactForm.send, {'attr': {'class': 'btn btn-primary'}}) }}
+            </div>
+        {{ form_end(contactForm) }}
+    </div>
 {% endblock %}

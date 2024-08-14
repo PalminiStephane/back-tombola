@@ -4,15 +4,18 @@ namespace App\Controller;
 
 use App\Entity\Draws;
 use App\Entity\Purchase;
+use App\Form\ContactType;
 use App\Form\PurchaseType;
+use Symfony\Component\Mime\Email;
 use App\Repository\DrawsRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 
 class HomeController extends AbstractController
@@ -52,12 +55,37 @@ class HomeController extends AbstractController
         ]);
     }
 
-    /**
+     /**
      * @Route("/contact", name="app_contact")
      */
-    public function contact(): Response
+    public function contact(Request $request, MailerInterface $mailer): Response
     {
-        return $this->render('home/contact.html.twig');
+        $form = $this->createForm(ContactType::class);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $contactData = $form->getData();
+
+            // Créer l'email
+            $email = (new Email())
+                ->from($contactData['email'])
+                ->to('votre-email@example.com') // Remplacez par votre adresse email
+                ->subject($contactData['subject'])
+                ->text($contactData['message']);
+
+            // Envoyer l'email
+            $mailer->send($email);
+
+            // Ajouter un message flash pour informer l'utilisateur
+            $this->addFlash('success', 'Votre message a été envoyé avec succès.');
+
+            // Rediriger vers la même page pour réinitialiser le formulaire
+            return $this->redirectToRoute('app_contact');
+        }
+
+        return $this->render('home/contact.html.twig', [
+            'contactForm' => $form->createView(),
+        ]);
     }
 
       /**
