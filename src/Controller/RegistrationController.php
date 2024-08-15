@@ -104,8 +104,11 @@ class RegistrationController extends AbstractController
 
         $verificationLink = $signatureComponents->getSignedUrl();
 
+        // Vérification de l'URL générée
+        dump($verificationLink); // Affiche l'URL dans le profiler Symfony
+
         $email = (new Email())
-            ->from('noreply@yourdomain.com')
+            ->from('palministephane@gmail.com') // à changer par 'noreply@yourdomain.com' lors de la mise en prod etds le mailer.yaml
             ->to($user->getEmail())
             ->subject('Vérification de votre adresse email')
             ->html($this->renderView(
@@ -128,11 +131,45 @@ class RegistrationController extends AbstractController
      */
     public function verifyUserEmail(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $id = $request->get('id');
         $token = $request->get('token');
+        $signature = $request->get('signature');
+        $expires = $request->get('expires');
 
-        if (null === $id || null === $token) {
+        if (null === $token || null === $signature || null === $expires) {
             $this->addFlash('error', 'Invalid verification link.');
+            return $this->redirectToRoute('app_register');
+        }
+
+        // Récupérer l'utilisateur via le token
+        $user = $entityManager->getRepository(User::class)->findOneBy(['emailVerificationToken' => $token]);
+
+        if (!$user) {
+            $this->addFlash('error', 'Invalid verification link.');
+            return $this->redirectToRoute('app_register');
+        }
+
+        try {
+            // Vérification de la validité du lien
+            $this->verifyEmailHelper->validateEmailConfirmation($request->getUri(), $user->getId(), $user->getEmail());
+    
+            // Vérification de la date d'expiration du lien
+            if (time() > $expires) {
+                $this->addFlash('error', 'Verification link has expired.');
+                return $this->redirectToRoute('app_register');
+            }
+    
+            // Marquer l'email comme vérifié
+            $user->setIsEmailVerified(true);
+            $user->setEmailVerificationToken(null);
+    
+            $entityManager->persist($user);
+            $entityManager->flush();
+    
+            $this->addFlash('success', 'Your email has been successfully verified.');
+    
+            return $this->redirectToRoute('app_login');
+        } catch (\Exception $e) {
+            $this->addFlash('error', 'Invalid or expired verification link.');
             return $this->redirectToRoute('app_register');
         }
     }
@@ -143,8 +180,8 @@ class RegistrationController extends AbstractController
     public function testSendEmail(MailerInterface $mailer): Response
     {
         $email = (new Email())
-            ->from('stefax@live.fr')  // Assurez-vous que cette adresse est vérifiée dans votre compte SES
-            ->to('palministephane@gmail.com')   // Adresse de test
+            ->from('palministephane@gmail.com')  // Assurez-vous que cette adresse est vérifiée dans votre compte SES
+            ->to('stefax@live.fr')   // Adresse de test
             ->subject('Test Email from Symfony via SES')
             ->html('<p>This is a test email to confirm SES integration.</p>');
 
@@ -156,5 +193,13 @@ class RegistrationController extends AbstractController
         }
 
         return $this->redirectToRoute('app_register');  // Redirigez vers la page que vous voulez après le test
+    }
+
+    /**
+     * @Route("/email-not-verified", name="app_email_not_verified")
+     */
+    public function emailNotVerified(): Response
+    {
+        return $this->render('security/email_not_verified.html.twig');
     }
 }
