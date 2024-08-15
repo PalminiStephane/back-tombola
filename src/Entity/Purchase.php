@@ -2,8 +2,10 @@
 
 namespace App\Entity;
 
-use App\Repository\PurchaseRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\PurchaseRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity(repositoryClass=PurchaseRepository::class)
@@ -43,6 +45,47 @@ class Purchase
      * @ORM\Column(type="string", length=64)
      */
     private $status;
+
+     /**
+     * @ORM\OneToMany(targetEntity=Tickets::class, mappedBy="purchase", cascade={"persist", "remove"})
+     */
+    private $tickets;
+
+    public function __construct()
+    {
+        $this->tickets = new ArrayCollection();
+    }
+
+    /**
+     * @return Collection|Tickets[]
+     */
+    public function getTickets(): Collection
+    {
+        return $this->tickets;
+    }
+
+    public function addTicket(Tickets $ticket): self
+    {
+        if (!$this->tickets->contains($ticket)) {
+            $this->tickets[] = $ticket;
+            $ticket->setPurchase($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTicket(Tickets $ticket): self
+    {
+        if ($this->tickets->removeElement($ticket)) {
+            // set the owning side to null (unless already changed)
+            if ($ticket->getPurchase() === $this) {
+                $ticket->setPurchase(null);
+            }
+        }
+
+        return $this;
+    }
+
 
     public function getId(): ?int
     {

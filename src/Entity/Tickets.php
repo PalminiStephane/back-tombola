@@ -44,6 +44,24 @@ class Tickets
      */
     private $status;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Purchase::class)
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $purchase;
+
+    public function getPurchase(): ?Purchase
+    {
+        return $this->purchase;
+    }
+
+    public function setPurchase(?Purchase $purchase): self
+    {
+        $this->purchase = $purchase;
+
+        return $this;
+    }
+
     public function getId(): ?int
     {
         return $this->id;

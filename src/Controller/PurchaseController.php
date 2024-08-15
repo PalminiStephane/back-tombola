@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Draws;
+use App\Entity\Tickets;
 use App\Entity\Purchase;
 use App\Form\PurchaseType;
 use App\Repository\DrawsRepository;
@@ -15,8 +16,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class PurchaseController extends AbstractController
 {
     /**
-     * @Route("/buy-ticket/{id}", name="app_buy_ticket", methods={"GET", "POST"})
-     */
+    * @Route("/purchase-ticket/{id}", name="app_purchase_ticket", methods={"GET", "POST"})
+    */
     public function buyTicket(int $id, Request $request, DrawsRepository $drawsRepository, EntityManagerInterface $entityManager): Response
     {
         $draw = $drawsRepository->find($id);
@@ -53,11 +54,29 @@ class PurchaseController extends AbstractController
 
             $entityManager->persist($purchase);
 
+            for ($i = 0; $i < $quantity; $i++) {
+                $ticket = new Tickets();
+                $ticket->setUser($this->getUser());
+                $ticket->setDraw($draw);
+                $ticket->setTicketNumber(mt_rand(100000, 999999));
+                $ticket->setPurchaseDate(new \DateTime());
+                $ticket->setStatus('purchased');
+                $ticket->setPurchase($purchase);
+
+                $entityManager->persist($ticket);
+            }
+
+            // Mettre à jour le nombre de tickets disponibles
             $draw->setTicketsAvailable($draw->getTicketsAvailable() - $quantity);
 
-            $entityManager->flush();
+            try {
+                $entityManager->flush();
+                $this->addFlash('success', 'Achat de tickets réalisé avec succès.');
+            } catch (\Exception $e) {
+                $this->addFlash('error', 'Une erreur est survenue lors de l\'achat des tickets.');
+                $entityManager->rollback();
+            }
 
-            $this->addFlash('success', 'Achat de tickets réalisé avec succès.');
             return $this->redirectToRoute('app_tombola_show', ['id' => $id]);
         }
 

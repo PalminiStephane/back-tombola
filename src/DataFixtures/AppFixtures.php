@@ -6,6 +6,7 @@ use Faker\Factory;
 use App\Entity\User;
 use App\Entity\Draws;
 use App\Entity\Tickets;
+use App\Entity\Purchase;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -45,7 +46,7 @@ class AppFixtures extends Fixture
         ];
 
         $drawReferences = [];
-        foreach ($drawData as $index => $data) {
+        foreach ($drawData as $data) {
             $draw = new Draws();
             $draw->setTitle($data['title']);
             $draw->setDescription('2 places en loge au stade Orange Vélodrome pour le match ' . ($data['title']));
@@ -84,16 +85,25 @@ class AppFixtures extends Fixture
             $manager->persist($user);
 
             // Achats de tickets pour une ou plusieurs tombolas aléatoires
-            $numTickets = $faker->numberBetween(0, 10);
-            for ($j = 0; $j < $numTickets; $j++) {
-                $randomDraw = $drawReferences[array_rand($drawReferences)];
+            $numTickets = $faker->numberBetween(1, 10); // S'assurer que la quantité n'est pas nulle
+            $randomDraw = $drawReferences[array_rand($drawReferences)];
 
+            $purchase = new Purchase();
+            $purchase->setUser($user);
+            $purchase->setDraw($randomDraw);
+            $purchase->setQuantity($numTickets);
+            $purchase->setPurchaseDate($faker->dateTimeBetween('-1 month', 'now'));
+            $purchase->setStatus('completed');
+            $manager->persist($purchase);
+
+            for ($j = 0; $j < $numTickets; $j++) {
                 $ticket = new Tickets();
                 $ticket->setUser($user);
                 $ticket->setDraw($randomDraw);
                 $ticket->setTicketNumber($faker->unique()->randomNumber());
                 $ticket->setPurchaseDate($faker->dateTimeBetween('-1 month', 'now'));
                 $ticket->setStatus('purchased');
+                $ticket->setPurchase($purchase);
                 $manager->persist($ticket);
             }
         }

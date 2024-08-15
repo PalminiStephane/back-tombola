@@ -41,6 +41,12 @@ class TicketController extends AbstractController
         // Récupérer le nombre de tickets à acheter
         $quantity = (int) $request->request->get('quantity', 1);
 
+        // Validation de la quantité
+        if ($quantity <= 0) {
+            $this->addFlash('error', 'La quantité de tickets doit être supérieure à zéro.');
+            return $this->redirectToRoute('app_tombola_show', ['id' => $id]);
+        }
+
         // Vérifier la disponibilité des tickets
         if ($quantity > $draw->getTicketsAvailable()) {
             $this->addFlash('error', 'Le nombre de tickets demandés dépasse le nombre disponible.');

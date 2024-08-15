@@ -8,7 +8,10 @@
             <div class="col">
                 <div class="row g-0 border rounded overflow-hidden flex-md-row align-items-start mb-4 shadow-sm position-relative">
                     <div class="col-12 col-md-4 movie__poster img-thumbnail">
-                        <img src="{{ '/' ~ drawForView.picture ?: asset('images/poster-placeholder.png') }}" class="img-fluid" style="object-fit: cover; width: 100%; height: auto;" alt="{{ drawForView.title }}">
+                        <img src="{{ drawForView.picture ? asset(drawForView.picture) : asset('images/poster-placeholder.png') }}" 
+                             class="img-fluid" 
+                             style="object-fit: cover; width: 100%; height: auto;" 
+                             alt="{{ drawForView.title }}">
                     </div>
                     <div class="col-12 col-md-8 p-4 d-flex flex-column position-static bg-light">
                         <strong class="d-inline-block mb-2 text-primary">{{ drawForView.status }}</strong>
