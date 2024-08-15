@@ -61,7 +61,7 @@ class PurchaseController extends AbstractController
                 $ticket->setTicketNumber(mt_rand(100000, 999999));
                 $ticket->setPurchaseDate(new \DateTime());
                 $ticket->setStatus('purchased');
-                $ticket->setPurchase($purchase);
+                $ticket->setPurchase($purchase); // Associe le ticket au purchase
 
                 $entityManager->persist($ticket);
             }

@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Draws;
+use App\Entity\Tickets;
 use App\Entity\Purchase;
 use App\Form\ContactType;
 use App\Form\PurchaseType;
@@ -95,7 +96,7 @@ class HomeController extends AbstractController
         return $this->render('home/about.html.twig');
     }
 
-     /**
+    /**
      * @Route("/draws/{id}", name="app_tombola_show", requirements={"id"="\d+"})
      * @IsGranted("ROLE_USER")  // Seuls les utilisateurs avec ROLE_USER peuvent acheter des tickets
      */
@@ -132,11 +133,30 @@ class HomeController extends AbstractController
 
             $entityManager->persist($purchase);
 
+            // Création des tickets associés à l'achat
+            for ($i = 0; $i < $quantity; $i++) {
+                $ticket = new Tickets();
+                $ticket->setUser($this->getUser());
+                $ticket->setDraw($draw);
+                $ticket->setTicketNumber(mt_rand(100000, 999999)); // Génération d'un numéro de ticket aléatoire
+                $ticket->setPurchaseDate(new \DateTime());
+                $ticket->setStatus('purchased');
+                $ticket->setPurchase($purchase); // Associe le ticket à l'achat
+
+                $entityManager->persist($ticket);
+            }
+
+            // Mettre à jour le nombre de tickets disponibles
             $draw->setTicketsAvailable($draw->getTicketsAvailable() - $quantity);
 
-            $entityManager->flush();
+            try {
+                $entityManager->flush();
+                $this->addFlash('success', 'Achat de tickets réalisé avec succès.');
+            } catch (\Exception $e) {
+                $this->addFlash('error', 'Une erreur est survenue lors de l\'achat des tickets.');
+                $entityManager->rollback();
+            }
 
-            $this->addFlash('success', 'Achat de tickets réalisé avec succès.');
             return $this->redirectToRoute('app_tombola_show', ['id' => $id]);
         }
 

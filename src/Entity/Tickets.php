@@ -45,7 +45,7 @@ class Tickets
     private $status;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Purchase::class)
+     * @ORM\ManyToOne(targetEntity=Purchase::class, inversedBy="tickets")
      * @ORM\JoinColumn(nullable=false)
      */
     private $purchase;
