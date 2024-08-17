@@ -4,6 +4,7 @@ namespace App\Command;
 
 use App\Entity\Draws;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Console\Input\InputInterface;
@@ -14,10 +15,12 @@ class DrawLotteryCommand extends Command
     protected static $defaultName = 'app:draw-lottery';
     
     private $entityManager;
+    private $logger;
 
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(EntityManagerInterface $entityManager, LoggerInterface $logger)
     {
         $this->entityManager = $entityManager;
+        $this->logger = $logger;
 
         parent::__construct();
     }
@@ -25,9 +28,7 @@ class DrawLotteryCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setDescription('Exécute le tirage au sort pour les tombolas ouvertes.')
-            // Ajoutez d'autres options ou arguments ici si nécessaire
-        ;
+            ->setDescription('Exécute le tirage au sort pour les tombolas ouvertes.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -38,16 +39,31 @@ class DrawLotteryCommand extends Command
         $drawsToExecute = $this->entityManager->getRepository(Draws::class)->findDrawsToExecute();
 
         foreach ($drawsToExecute as $draw) {
-            $winner = $this->selectWinner($draw);
-            $prize = $this->selectPrize($draw);
+            try {
+                $io->text('Exécution du tirage au sort pour : ' . $draw->getTitle());
 
-            if ($winner) {
-                $draw->setWinners($winner->getName());
-                $draw->setPrize($prize);
+                if ($draw->getStatus() !== 'open') {
+                    $io->warning('La tombola ' . $draw->getTitle() . ' n\'est pas ouverte pour le tirage.');
+                    continue;
+                }
+
+                $winner = $this->selectWinner($draw);
+                $prize = $this->selectPrize($draw);
+
+                if ($winner) {
+                    $draw->setWinners($winner->getName());
+                    $draw->setPrize($prize);
+                    $io->success('Gagnant pour ' . $draw->getTitle() . ' : ' . $winner->getName());
+                } else {
+                    $io->warning('Aucun gagnant sélectionné pour la tombola ' . $draw->getTitle());
+                }
+
+                $draw->setStatus('closed');
+                $this->entityManager->persist($draw);
+            } catch (\Exception $e) {
+                $io->error('Erreur lors du traitement de la tombola ' . $draw->getTitle() . ': ' . $e->getMessage());
+                $this->logger->error('Erreur lors du tirage au sort de la tombola ' . $draw->getId(), ['exception' => $e]);
             }
-
-            $draw->setStatus('closed');
-            $this->entityManager->persist($draw);
         }
 
         $this->entityManager->flush();
@@ -56,7 +72,7 @@ class DrawLotteryCommand extends Command
 
         return Command::SUCCESS;
     }
-
+    
     private function selectWinner(Draws $draw)
     {
         $tickets = $draw->getTickets()->toArray();
@@ -71,6 +87,6 @@ class DrawLotteryCommand extends Command
 
     private function selectPrize(Draws $draw)
     {
-        return 'Le lot associé à la tombola';
+        return $draw->getPrize();
     }
 }

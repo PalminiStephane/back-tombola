@@ -20,12 +20,23 @@
         
         {# Afficher les informations du dernier gagnant #}
         {% if lastWinner %}
-            <div class="alert alert-info">
-                <h4>Dernier gagnant : {{ lastWinner.winnerName }}</h4>
-                <p>Lot remporté : {{ lastWinner.prize }}</p>
+            <div id="confetti-container" class="confetti-animation" style="display: none;"></div>
+            <div id="winner-container" class="winner-display">
+                <div class="winner-header">Dernier Gagnant</div>
+                <div class="winner-content">
+                    Félicitations à {{ lastWinner.winnerName }} ! Vous avez gagné {{ lastWinner.prize }} !
+                </div>
+            </div>
+        {% else %}
+            <div id="winner-container" class="winner-display">
+                <div class="winner-header">Pas encore de gagnant</div>
+                <div class="winner-content">
+                    Le tirage au sort n'a pas encore eu lieu. Revenez bientôt pour connaître le gagnant !
+                </div>
             </div>
         {% endif %}
-
+        
+        {# Afficher les tombolas à venir #}
         {% for draw in draws %}
             <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm bg-white position-relative">
                 <div class="col-md-4 p-0">

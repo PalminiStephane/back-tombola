@@ -51,3 +51,49 @@ h1 {
     font-size: 1.5rem;
     text-align: center;
 }
+
+#confetti-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: url('/images/confetti.gif') no-repeat center center;
+    background-size: cover;
+    z-index: 9999;
+}
+
+#winner-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 50%;
+    padding: 20px; /* Ajout de padding pour un encart confortable */
+    background-color: #f8f9fa; /* Fond de couleur claire */
+    border-radius: 10px; /* Bordures arrondies */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Légère ombre pour donner de la profondeur */
+    margin: 0 auto; /* Centrer horizontalement */
+    opacity: 0;
+    transform: scale(0.9); /* Taille initiale légèrement réduite */
+    transition: opacity 1s ease-in-out, transform 1s ease-in-out;
+    z-index: 10000;
+}
+
+#winner-container .winner-header {
+    font-size: 22px;
+    font-weight: bold;
+    color: #343a40; /* Couleur du texte pour l'en-tête */
+    margin-bottom: 10px;
+}
+
+#winner-container .winner-content {
+    font-size: 18px;
+    color: #495057; /* Couleur du texte pour le contenu */
+    text-align: center;
+}
+
+.animate-winner {
+    opacity: 1;
+    transform: scale(1);
+}

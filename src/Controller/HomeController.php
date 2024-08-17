@@ -45,7 +45,7 @@ class HomeController extends AbstractController
 
         if ($lastDraw) {
             $lastWinner = [
-                'winnerName' => $lastDraw->getWinnerName(),
+                'winnerName' => $lastDraw->getWinners(),
                 'prize' => $lastDraw->getPrize()
             ];
         }
