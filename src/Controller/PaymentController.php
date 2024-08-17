@@ -68,7 +68,7 @@ class PaymentController extends AbstractController
     }
 
     /**
-     * @Route("/payment/webhook", name="payment_webhook", methods={"POST"})
+     * @Route("/payment/webhook", name="payment_webhook")
      */
     public function webhook(Request $request): Response
     {
