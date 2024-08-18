@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tickets de votre Achat{% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <h1 class="mb-4 text-center ticket-header">Vos Tickets pour l'achat n°{{ purchase.id }}</h1>
+
+    {% if tickets is not empty %}
+        <div class="row justify-content-center">
+            {% for ticket in tickets %}
+                <div class="col-md-4 mb-4">
+                    <div class="ticket-card shadow-sm" style="background: linear-gradient(135deg, #e0f7fa, #80deea); border-radius: 15px; padding: 20px;">
+                        <div class="ticket-card-header text-center" style="border-bottom: 1px solid #ccc; padding-bottom: 15px;">
+                            <div class="d-flex justify-content-center align-items-center">
+                                <img src="{{ asset('favicon.png') }}" class="ticket-img-top" alt="Ticket Image" style="width: 40px; height: 40px;">
+                                <span class="ms-2 logo-text" style="color: #2e7fe9; font-size: 1.5em; font-weight: bold; text-transform: uppercase;">GTP</span>
+                            </div>
+                        </div>
+                        <div class="ticket-card-body text-center">
+                            <h5 class="ticket-title" style="color: #00796b;">Ticket n°{{ ticket.ticketNumber }}</h5>
+                            <p class="ticket-text">
+                                <strong>Date d'achat :</strong> {{ ticket.purchaseDate|date('d/m/Y') }}<br>
+                                <strong>Statut :</strong> {{ ticket.status }}
+                            </p>
+                            <p class="ticket-info">
+                                <strong>Tirage :</strong> {{ ticket.draw.title }}<br>
+                                <strong>Date du tirage :</strong> {{ ticket.draw.drawDate|date('d/m/Y') }}
+                            </p>
+                        </div>
+                        <div class="ticket-card-footer text-center">
+                            <small class="text-muted">Bonne chance!</small>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-muted">Aucun ticket trouvé pour cet achat.</p>
+    {% endif %}
+
+    <div class="text-center mt-4">
+        <a href="{{ path('app_order_history') }}" class="btn btn-primary">
+            Retour à l'historique des commandes
+        </a>
+    </div>
+</div>
+{% endblock %}

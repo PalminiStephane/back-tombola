@@ -86,7 +86,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $plainPassword;
 
     /**
-     * @ORM\OneToMany(targetEntity=Purchase::class, mappedBy="user")
+     * @ORM\OneToMany(targetEntity=Purchase::class, mappedBy="user", cascade={"persist", "remove"})
      */
     private $purchases;
 

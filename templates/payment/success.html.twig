@@ -1,6 +1,18 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}Paiement Réussi{% endblock %}
+
 {% block body %}
-<h1>Paiement réussi !</h1>
-<p>Merci pour votre achat.</p>
+<div class="container my-5 text-center">
+    <div class="card shadow-lg p-4">
+        <div class="card-body">
+            <h1 class="display-4 text-success mb-4">Merci pour votre achat !</h1>
+            <p class="lead">Votre paiement a été traité avec succès.</p>
+            <img src="{{ asset('images/payment_success.png') }}" alt="Paiement Réussi" class="img-fluid my-4" style="max-width: 200px;">
+            <p class="mb-4">Toute l'équipe de GTP vous souhaite bonne chance pour le tirage au sort !</p>
+            <a href="{{ path('app_home') }}" class="btn btn-primary btn-lg">Retour à l'accueil</a>
+            <a href="{{ path('app_order_history') }}" class="btn btn-secondary btn-lg">Voir vos achats</a>
+        </div>
+    </div>
+</div>
 {% endblock %}

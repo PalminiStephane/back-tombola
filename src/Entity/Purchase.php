@@ -20,13 +20,13 @@ class Purchase
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class)
+     *  @ORM\ManyToOne(targetEntity=User::class, inversedBy="purchases")
      * @ORM\JoinColumn(nullable=false)
      */
     private $user;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Draws::class)
+     * @ORM\ManyToOne(targetEntity=Draws::class, inversedBy="purchases")
      * @ORM\JoinColumn(nullable=false)
      */
     private $draw;

@@ -7,17 +7,20 @@ use App\Entity\Tickets;
 use App\Entity\Purchase;
 use App\Form\PurchaseType;
 use App\Repository\DrawsRepository;
+use Stripe\Stripe;
+use Stripe\Checkout\Session;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class PurchaseController extends AbstractController
 {
     /**
-    * @Route("/purchase-ticket/{id}", name="app_purchase_ticket", methods={"GET", "POST"})
-    */
+     * @Route("/purchase-ticket/{id}", name="app_purchase_ticket", methods={"GET", "POST"})
+     */
     public function buyTicket(int $id, Request $request, DrawsRepository $drawsRepository, EntityManagerInterface $entityManager): Response
     {
         $draw = $drawsRepository->find($id);
@@ -45,39 +48,28 @@ class PurchaseController extends AbstractController
                 return $this->redirectToRoute('app_tombola_show', ['id' => $id]);
             }
 
-            $purchase = new Purchase();
-            $purchase->setUser($this->getUser());
-            $purchase->setDraw($draw);
-            $purchase->setQuantity($quantity);
-            $purchase->setPurchaseDate(new \DateTime());
-            $purchase->setStatus('completed');
+            // Configurer Stripe avec votre clé secrète
+            Stripe::setApiKey($this->getParameter('stripe_secret_key'));
 
-            $entityManager->persist($purchase);
+            // Créer une session de paiement Stripe
+            $session = Session::create([
+                'payment_method_types' => ['card'],
+                'line_items' => [[
+                    'price_data' => [
+                        'currency' => 'eur',
+                        'product_data' => [
+                            'name' => 'Ticket pour ' . $draw->getTitle(),
+                        ],
+                        'unit_amount' => $draw->getTicketPrice() * 100, // Montant en centimes
+                    ],
+                    'quantity' => $quantity,
+                ]],
+                'mode' => 'payment',
+                'success_url' => $this->generateUrl('payment_success', [], UrlGeneratorInterface::ABSOLUTE_URL),
+                'cancel_url' => $this->generateUrl('payment_cancel', [], UrlGeneratorInterface::ABSOLUTE_URL),
+            ]);
 
-            for ($i = 0; $i < $quantity; $i++) {
-                $ticket = new Tickets();
-                $ticket->setUser($this->getUser());
-                $ticket->setDraw($draw);
-                $ticket->setTicketNumber(mt_rand(100000, 999999));
-                $ticket->setPurchaseDate(new \DateTime());
-                $ticket->setStatus('purchased');
-                $ticket->setPurchase($purchase); // Associe le ticket au purchase
-
-                $entityManager->persist($ticket);
-            }
-
-            // Mettre à jour le nombre de tickets disponibles
-            $draw->setTicketsAvailable($draw->getTicketsAvailable() - $quantity);
-
-            try {
-                $entityManager->flush();
-                $this->addFlash('success', 'Achat de tickets réalisé avec succès.');
-            } catch (\Exception $e) {
-                $this->addFlash('error', 'Une erreur est survenue lors de l\'achat des tickets.');
-                $entityManager->rollback();
-            }
-
-            return $this->redirectToRoute('app_tombola_show', ['id' => $id]);
+            return $this->redirect($session->url);
         }
 
         return $this->render('purchase/buy_ticket.html.twig', [

@@ -1,0 +1,47 @@
+{# templates/order/history.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Historique des Achats{% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <h1 class="mb-4 text-center">Votre Historique des Achats</h1>
+
+    {% if orders is not empty %}
+        <div class="list-group">
+            {% for order in orders %}
+                <div class="list-group-item mb-4 p-4 shadow-sm" style="border-radius: 15px; background: #f9f9f9;">
+                    <div class="row align-items-center">
+                        <div class="col-md-3 text-center">
+                            <img src="{{ asset(order.draw.picture) }}" alt="{{ order.draw.title }}" class="img-thumbnail" style="width: 100%; height: auto; max-width: 150px; object-fit: cover; border-radius: 10px;">
+                        </div>
+                        <div class="col-md-9">
+                            <h5 class="mb-2" style="color: #2e7fe9;">{{ order.draw.title }}</h5>
+                            <p class="mb-1">
+                                <strong>Date de l'achat :</strong> {{ order.purchaseDate|date('d/m/Y') }}<br>
+                                <strong>Date du tirage :</strong> {{ order.draw.drawDate|date('d/m/Y') }}<br>
+                                <strong>Quantité :</strong> {{ order.quantity }}<br>
+                                <strong>Statut :</strong> 
+                                {% if order.status == 'completed' %}
+                                    <span class="badge bg-success">{{ order.status }}</span>
+                                {% else %}
+                                    <span class="badge bg-warning text-dark">{{ order.status }}</span>
+                                {% endif %}
+                            </p>
+                            <a href="{{ path('app_order_tickets', {id: order.id}) }}" class="btn btn-primary btn-sm mt-3">Voir les tickets</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        {# Pagination links #}
+        <div class="d-flex justify-content-center mt-4">
+            {{ knp_pagination_render(orders) }}
+        </div>
+    {% else %}
+        <p class="text-muted text-center">Vous n'avez effectué aucun achat pour le moment.</p>
+    {% endif %}
+</div>
+{% endblock %}

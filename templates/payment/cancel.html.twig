@@ -1,6 +1,18 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}Paiement Annulé{% endblock %}
+
 {% block body %}
-<h1>Paiement annulé</h1>
-<p>Votre paiement a été annulé.</p>
+<div class="container my-5 text-center">
+    <div class="card shadow-lg p-4">
+        <div class="card-body">
+            <h1 class="display-4 text-danger mb-4">Paiement Annulé</h1>
+            <p class="lead">Votre paiement n'a pas été finalisé.</p>
+            <img src="{{ asset('images/payment_cancel.png') }}" alt="Paiement Annulé" class="img-fluid my-4" style="max-width: 200px;">
+            <p class="mb-4">Toute l'équipe de GPT est désolée que vous n'ayez pas pu finaliser votre achat. Si vous avez rencontré un problème, n'hésitez pas à nous contacter pour obtenir de l'aide.</p>
+            <a href="{{ path('app_home') }}" class="btn btn-primary btn-lg">Retour à l'accueil</a>
+            {# <a href="{{ path('app_payment_retry') }}" class="btn btn-secondary btn-lg">Réessayer le paiement</a> #}
+        </div>
+    </div>
+</div>
 {% endblock %}

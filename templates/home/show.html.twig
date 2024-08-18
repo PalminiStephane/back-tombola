@@ -21,7 +21,7 @@
 
                         {# Formulaire pour acheter un ticket #}
                         {% if drawForView.status == 'open' %}
-                            {{ form_start(form) }}
+                            {{ form_start(form, {'action': path('app_purchase_ticket', {'id': drawForView.id})}) }}
                                 <div class="form-group mb-3">
                                     {{ form_label(form.quantity) }}
                                     {{ form_widget(form.quantity) }}
@@ -32,6 +32,7 @@
                         {% else %}
                             <p class="text-danger">Les ventes de tickets sont fermées pour cette tombola.</p>
                         {% endif %}
+
 
                         <div class="d-flex mb-4 mt-3">
                             <a href="{{ path('app_home') }}" class="btn btn-secondary">Retour à la liste</a>

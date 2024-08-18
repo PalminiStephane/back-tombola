@@ -85,8 +85,8 @@ class Draws
     private $picture;
 
     /**
-     * @ORM\OneToMany(targetEntity=Purchase::class, mappedBy="draw")
-     */
+    * @ORM\OneToMany(targetEntity=Purchase::class, mappedBy="draw", cascade={"persist", "remove"})
+    */
     private $purchases;
 
     public function __construct()

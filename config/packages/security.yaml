@@ -27,9 +27,14 @@ security:
                 path: app_logout
 
     access_control:
-        # Ajoutez vos règles d'accès ici
-         - { path: ^/admin, roles: ROLE_ADMIN }
-         - { path: ^/profile, roles: ROLE_USER }
+        # Accès à l'administration
+        - { path: ^/admin, roles: ROLE_ADMIN }
+
+        # Accès au profil
+        - { path: ^/profile, roles: ROLE_USER }
+
+        # Accès aux commandes, seulement si l'email est vérifié
+        - { path: ^/order, roles: ROLE_USER, allow_if: "is_granted('ROLE_USER') and user.isEmailVerified()" }
 
 when@test:
     security:
