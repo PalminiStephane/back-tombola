@@ -51,6 +51,11 @@ class Purchase
      */
     private $tickets;
 
+     /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $stripeSessionId;
+
     public function __construct()
     {
         $this->tickets = new ArrayCollection();
@@ -148,6 +153,18 @@ class Purchase
     public function setStatus(string $status): self
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function getStripeSessionId(): ?string
+    {
+        return $this->stripeSessionId;
+    }
+
+    public function setStripeSessionId(?string $stripeSessionId): self
+    {
+        $this->stripeSessionId = $stripeSessionId;
 
         return $this;
     }
