@@ -28,7 +28,7 @@ class PaymentController extends AbstractController
         $this->logger = $logger;
     }
 
- /**
+    /**
      * @Route("/purchase-ticket/{id}", name="app_purchase_ticket", methods={"GET", "POST"})
      */
     public function buyTicket(int $id, Request $request, DrawsRepository $drawsRepository, EntityManagerInterface $entityManager): Response
@@ -79,6 +79,19 @@ class PaymentController extends AbstractController
                 'cancel_url' => $this->generateUrl('payment_cancel', [], UrlGeneratorInterface::ABSOLUTE_URL),
             ]);
 
+            // Créer l'enregistrement Purchase
+            $purchase = new Purchase();
+            $purchase->setUser($this->getUser());
+            $purchase->setDraw($draw);
+            $purchase->setQuantity($quantity);
+            $purchase->setPurchaseDate(new \DateTime());
+            $purchase->setStatus('pending');
+            $purchase->setStripeSessionId($session->id);
+
+            $entityManager->persist($purchase);
+            $entityManager->flush();
+
+            // Rediriger vers Stripe Checkout
             return $this->redirect($session->url);
         }
 
@@ -87,6 +100,7 @@ class PaymentController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+
 
     /**
      * @Route("/purchase/{drawId}/{quantity}", name="purchase_ticket")
@@ -162,7 +176,9 @@ class PaymentController extends AbstractController
         $this->logger->info('Webhook received', ['payload' => $payload, 'signature' => $sigHeader]);
 
         try {
-            $event = \Stripe\Webhook::constructEvent($payload, $sigHeader, $endpointSecret);
+            $event = \Stripe\Webhook::constructEvent(
+                $payload, $sigHeader, $endpointSecret
+            );
         } catch(\UnexpectedValueException $e) {
             $this->logger->error('Invalid payload', ['error' => $e->getMessage()]);
             return new Response('', 400);
@@ -171,10 +187,10 @@ class PaymentController extends AbstractController
             return new Response('', 400);
         }
 
-        $this->logger->info('Webhook event type', ['type' => $event->type]);
-
         if ($event->type === 'checkout.session.completed') {
             $session = $event->data->object;
+
+            $this->logger->info('Processing checkout.session.completed event', ['session_id' => $session->id]);
 
             $purchase = $this->entityManager->getRepository(Purchase::class)->findOneBy([
                 'stripeSessionId' => $session->id,
@@ -182,7 +198,6 @@ class PaymentController extends AbstractController
 
             if ($purchase) {
                 $purchase->setStatus('completed');
-                $this->logger->info('Purchase found and status updated', ['purchase_id' => $purchase->getId()]);
 
                 for ($i = 0; $i < $purchase->getQuantity(); $i++) {
                     $ticket = new Tickets();
@@ -194,7 +209,6 @@ class PaymentController extends AbstractController
                     $ticket->setPurchase($purchase);
 
                     $this->entityManager->persist($ticket);
-                    $this->logger->info('Ticket created', ['ticket_number' => $ticket->getTicketNumber()]);
                 }
 
                 $purchase->getDraw()->setTicketsAvailable(
@@ -202,14 +216,13 @@ class PaymentController extends AbstractController
                 );
 
                 $this->entityManager->flush();
-                $this->logger->info('Database changes flushed');
+                $this->logger->info('Purchase completed and tickets created', ['purchase_id' => $purchase->getId()]);
             } else {
-                $this->logger->warning('No purchase found for session', ['session_id' => $session->id]);
+                $this->logger->error('No purchase found for session ID: ' . $session->id);
             }
-        } else {
-            $this->logger->info('Event type not handled', ['type' => $event->type]);
         }
 
         return new Response('Webhook handled', 200);
     }
+
 }
