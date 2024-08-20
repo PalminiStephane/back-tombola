@@ -100,7 +100,7 @@ class HomeController extends AbstractController
      * @Route("/draws/{id}", name="app_tombola_show", requirements={"id"="\d+"})
      * @IsGranted("ROLE_USER")  // Seuls les utilisateurs avec ROLE_USER peuvent acheter des tickets
      */
-    public function show($id, DrawsRepository $drawsRepository, Request $request, EntityManagerInterface $entityManager): Response
+    public function show($id, DrawsRepository $drawsRepository, Request $request): Response
     {
         $draw = $drawsRepository->find($id);
 
@@ -124,40 +124,11 @@ class HomeController extends AbstractController
                 return $this->redirectToRoute('app_tombola_show', ['id' => $id]);
             }
 
-            $purchase = new Purchase();
-            $purchase->setUser($this->getUser());
-            $purchase->setDraw($draw);
-            $purchase->setQuantity($quantity);
-            $purchase->setPurchaseDate(new \DateTime());
-            $purchase->setStatus('completed');
-
-            $entityManager->persist($purchase);
-
-            // Création des tickets associés à l'achat
-            for ($i = 0; $i < $quantity; $i++) {
-                $ticket = new Tickets();
-                $ticket->setUser($this->getUser());
-                $ticket->setDraw($draw);
-                $ticket->setTicketNumber(mt_rand(100000, 999999)); // Génération d'un numéro de ticket aléatoire
-                $ticket->setPurchaseDate(new \DateTime());
-                $ticket->setStatus('purchased');
-                $ticket->setPurchase($purchase); // Associe le ticket à l'achat
-
-                $entityManager->persist($ticket);
-            }
-
-            // Mettre à jour le nombre de tickets disponibles
-            $draw->setTicketsAvailable($draw->getTicketsAvailable() - $quantity);
-
-            try {
-                $entityManager->flush();
-                $this->addFlash('success', 'Achat de tickets réalisé avec succès.');
-            } catch (\Exception $e) {
-                $this->addFlash('error', 'Une erreur est survenue lors de l\'achat des tickets.');
-                $entityManager->rollback();
-            }
-
-            return $this->redirectToRoute('app_tombola_show', ['id' => $id]);
+            // Redirection vers la route de création de session de paiement
+            return $this->redirectToRoute('purchase_ticket', [
+                'drawId' => $draw->getId(),
+                'quantity' => $quantity,
+            ]);
         }
 
         return $this->render('home/show.html.twig', [
@@ -165,4 +136,5 @@ class HomeController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+
 }
