@@ -2,8 +2,8 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-success">
         <div class="container-fluid">
             <a href="{{ path("default") }}" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none header-logo">
-                <img src="{{ asset('favicon.png') }}" height="24" alt="Logo O'flix">
-                <span class="header-logo__title">O'flix</span>
+                <img src="{{ asset('favicon.png') }}" height="24" alt="Logo GPT">
+                <span class="header-logo__title">GPT</span>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarSupportedContent">
@@ -17,17 +17,17 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                             data-bs-toggle="dropdown">
-                            <span>Seasons</span>
+                            <span>Tombolas</span>
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="{{ path("app_backoffice_season_index") }}">All Seasons</a></li>
-                            <li><a class="dropdown-item" href="{{ path("app_backoffice_season_new") }}">Create Seasons</a></li>
+                            <li><a class="dropdown-item" href="{{ path("app_backoffice_draws_index") }}">Toutes les Tombolas</a></li>
+                            <li><a class="dropdown-item" href="{{ path("app_backoffice_draws_new") }}">Créer une Tombola</a></li>
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
                         </ul>
                     </li>
-                    <li class="nav-item dropdown">
+                    {# <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                             data-bs-toggle="dropdown">
                             <span>Movies</span>
@@ -39,15 +39,15 @@
                                 <hr class="dropdown-divider">
                             </li>
                         </ul>
-                    </li>
+                    </li> #}
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                             data-bs-toggle="dropdown">
-                            <span>Users</span>
+                            <span>Utilisateurs</span>
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="{{ path("app_backoffice_user_index") }}">All Users</a></li>
-                            <li><a class="dropdown-item" href="{{ path("app_backoffice_user_new") }}">Create Users</a></li>
+                            <li><a class="dropdown-item" href="{{ path("app_backoffice_user_index") }}">Tous les utilisateurs</a></li>
+                            <li><a class="dropdown-item" href="{{ path("app_backoffice_user_new") }}">Créer un utilisateur</a></li>
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
@@ -58,21 +58,12 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                             data-bs-toggle="dropdown">
-                            <span>Charles</span>
+                            <span>{{ app.user.name }}</span>
                             <i class="bi bi-person-square"></i>
                         </a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="#">Profil</a></li>
                             <li><a class="dropdown-item" href="{{ path('app_backoffice_admin')}}">Backoffice</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            {# https://twig.symfony.com/doc/3.x/filters/slice.html #}
-                            {% if app.user %}
-                                {% for role in app.user.roles %}
-                                    <li class="dropdown-item">{{ role|slice(5,)|lower }}</li>
-                                {% endfor %}
-                            {% endif %}
                             <li>
                                 <hr class="dropdown-divider">
                             </li>

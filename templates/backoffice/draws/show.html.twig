@@ -1,0 +1,70 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Draws{% endblock %}
+
+{% block body %}
+    <h1>Draws</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ draw.id }}</td>
+            </tr>
+            <tr>
+                <th>Title</th>
+                <td>{{ draw.title }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ draw.description }}</td>
+            </tr>
+            <tr>
+                <th>DrawDate</th>
+                <td>{{ draw.drawDate ? draw.drawDate|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>TicketPrice</th>
+                <td>{{ draw.ticketPrice }}</td>
+            </tr>
+            <tr>
+                <th>TicketsAvailable</th>
+                <td>{{ draw.ticketsAvailable }}</td>
+            </tr>
+            <tr>
+                <th>TotalTickets</th>
+                <td>{{ draw.totalTickets }}</td>
+            </tr>
+            <tr>
+                <th>Status</th>
+                <td>{{ draw.status }}</td>
+            </tr>
+            <tr>
+                <th>TicketValidityDuration</th>
+                <td>{{ draw.ticketValidityDuration ? draw.ticketValidityDuration.format('%y year(s), %m month(s), %d day(s)') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Winners</th>
+                <td>{{ draw.winners }}</td>
+            </tr>
+            <tr>
+                <th>WinnerName</th>
+                <td>{{ draw.winnerName }}</td>
+            </tr>
+            <tr>
+                <th>Prize</th>
+                <td>{{ draw.prize }}</td>
+            </tr>
+            <tr>
+                <th>Picture</th>
+                <td>{{ draw.picture }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_backoffice_draws_index') }}">back to list</a>
+
+    <a href="{{ path('app_backoffice_draws_edit', {'id': draw.id}) }}">edit</a>
+
+    {{ include('backoffice/draws/_delete_form.html.twig') }}
+{% endblock %}

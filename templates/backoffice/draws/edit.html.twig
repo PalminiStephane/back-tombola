@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Draws{% endblock %}
+
+{% block body %}
+    <h1>Edit Draws</h1>
+
+    {{ include('backoffice/draws/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_backoffice_draws_index') }}">back to list</a>
+
+    {{ include('backoffice/draws/_delete_form.html.twig') }}
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Draws{% endblock %}
+
+{% block body %}
+    <h1>Create new Draws</h1>
+
+    {{ include('backoffice/draws/_form.html.twig') }}
+
+    <a href="{{ path('app_backoffice_draws_index') }}">back to list</a>
+{% endblock %}

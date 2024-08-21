@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des Achats{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Gestion des Achats</h2>
+
+    <table class="table table-striped table-bordered">
+        <thead class="thead-dark">
+            <tr>
+                <th>ID</th>
+                <th>Utilisateur</th>
+                <th>Tombola</th>
+                <th>Quantité</th>
+                <th>Date d'Achat</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for purchase in purchases %}
+            <tr>
+                <td>{{ purchase.id }}</td>
+                <td>{{ purchase.user ? purchase.user.email : 'Anonyme' }}</td>
+                <td>{{ purchase.draw ? purchase.draw.title : 'N/A' }}</td>
+                <td>{{ purchase.quantity }}</td>
+                <td>{{ purchase.purchaseDate ? purchase.purchaseDate|date('d/m/Y') : 'N/A' }}</td>
+                <td>{{ purchase.status }}</td>
+                <td>
+                    <a href="{{ path('app_backoffice_purchase_show', {'id': purchase.id}) }}" class="btn btn-info btn-sm">Voir</a>
+                    <a href="{{ path('app_backoffice_purchase_edit', {'id': purchase.id}) }}" class="btn btn-warning btn-sm">Modifier</a>
+                    <a href="{{ path('app_backoffice_purchase_delete', {'id': purchase.id}) }}" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet achat?');">Supprimer</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7" class="text-center">Aucun achat trouvé</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

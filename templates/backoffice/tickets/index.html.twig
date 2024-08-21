@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des Tickets{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Gestion des Tickets</h2>
+
+    <table class="table table-striped table-bordered">
+        <thead class="thead-dark">
+            <tr>
+                <th>ID</th>
+                <th>Numéro de Ticket</th>
+                <th>Utilisateur</th>
+                <th>Tombola</th>
+                <th>Date d'Achat</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for ticket in tickets %}
+            <tr>
+                <td>{{ ticket.id }}</td>
+                <td>{{ ticket.ticketNumber }}</td>
+                <td>{{ ticket.user ? ticket.user.email : 'Anonyme' }}</td>
+                <td>{{ ticket.draw ? ticket.draw.title : 'N/A' }}</td>
+                <td>{{ ticket.purchaseDate ? ticket.purchaseDate|date('d/m/Y') : 'N/A' }}</td>
+                <td>{{ ticket.status }}</td>
+                <td>
+                    <a href="{{ path('app_backoffice_tickets_show', {'id': ticket.id}) }}" class="btn btn-info btn-sm">Voir</a>
+                    <a href="{{ path('app_backoffice_tickets_edit', {'id': ticket.id}) }}" class="btn btn-warning btn-sm">Modifier</a>
+                    <a href="{{ path('app_backoffice_tickets_delete', {'id': ticket.id}) }}" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce ticket?');">Supprimer</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7" class="text-center">Aucun ticket trouvé</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

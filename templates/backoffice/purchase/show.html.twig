@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Purchase{% endblock %}
+
+{% block body %}
+    <h1>Purchase</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ purchase.id }}</td>
+            </tr>
+            <tr>
+                <th>Quantity</th>
+                <td>{{ purchase.quantity }}</td>
+            </tr>
+            <tr>
+                <th>PurchaseDate</th>
+                <td>{{ purchase.purchaseDate ? purchase.purchaseDate|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Status</th>
+                <td>{{ purchase.status }}</td>
+            </tr>
+            <tr>
+                <th>StripeSessionId</th>
+                <td>{{ purchase.stripeSessionId }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_backoffice_purchase_index') }}">back to list</a>
+
+    <a href="{{ path('app_backoffice_purchase_edit', {'id': purchase.id}) }}">edit</a>
+
+    {{ include('backoffice/purchase/_delete_form.html.twig') }}
+{% endblock %}

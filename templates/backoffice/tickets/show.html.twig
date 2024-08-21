@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tickets{% endblock %}
+
+{% block body %}
+    <h1>Tickets</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ ticket.id }}</td>
+            </tr>
+            <tr>
+                <th>TicketNumber</th>
+                <td>{{ ticket.ticketNumber }}</td>
+            </tr>
+            <tr>
+                <th>PurchaseDate</th>
+                <td>{{ ticket.purchaseDate ? ticket.purchaseDate|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Status</th>
+                <td>{{ ticket.status }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_backoffice_tickets_index') }}">back to list</a>
+
+    <a href="{{ path('app_backoffice_tickets_edit', {'id': ticket.id}) }}">edit</a>
+
+    {{ include('backoffice/tickets/_delete_form.html.twig') }}
+{% endblock %}

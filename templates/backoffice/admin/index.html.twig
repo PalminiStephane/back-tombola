@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}GPT-Backoffice - Gestion Globale{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card text-white bg-primary mb-3">
+                <div class="card-header">Gestion des Tombolas</div>
+                <div class="card-body">
+                    <h5 class="card-title">Gérer toutes les tombolas</h5>
+                    <a href="{{ path('app_backoffice_draws_index')}}" class="btn btn-light">Voir les Tombolas</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-white bg-success mb-3">
+                <div class="card-header">Gestion des Tickets</div>
+                <div class="card-body">
+                    <h5 class="card-title">Gérer tous les tickets</h5>
+                    <a href="{{ path('app_backoffice_tickets_index')}}" class="btn btn-light">Voir les Tickets</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-white bg-warning mb-3">
+                <div class="card-header">Gestion des Achats</div>
+                <div class="card-body">
+                    <h5 class="card-title">Gérer tous les achats</h5>
+                    <a href="{{ path('app_backoffice_purchase_index')}}" class="btn btn-light">Voir les Achats</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card text-white bg-danger mb-3">
+                <div class="card-header">Gestion des Utilisateurs</div>
+                <div class="card-body">
+                    <h5 class="card-title">Gérer tous les utilisateurs</h5>
+                    <a href="{{ path('app_backoffice_user_index')}}" class="btn btn-light">Voir les Utilisateurs</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
