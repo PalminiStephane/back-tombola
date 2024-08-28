@@ -168,4 +168,9 @@ class Purchase
 
         return $this;
     }
+
+    public function __toString()
+    {
+        return sprintf('Purchase #%d - %s', $this->getId(), $this->getStatus());
+    }
 }

@@ -304,4 +304,11 @@ class Draws
 
         return $this;
     }
+
+    public function __toString(): string
+    {
+        // Retourne une représentation textuelle de l'entité. 
+        // Par exemple, ici, vous pourriez retourner le titre de la tombola.
+        return $this->getTitle(); // ou une autre propriété que vous souhaitez afficher
+    }
 }
