@@ -47,7 +47,7 @@ class DrawsRepository extends ServiceEntityRepository
             ->andWhere('d.drawDate > :limitDate')
             ->setParameter('status', 'open')
             ->setParameter('now', new \DateTime())
-            ->setParameter('limitDate', new \DateTime('+1 day'))
+            ->setParameter('limitDate', new \DateTime('+2 day'))
             ->orderBy('d.drawDate', 'ASC');
 
         return $qb->getQuery()->getResult();
@@ -61,7 +61,7 @@ class DrawsRepository extends ServiceEntityRepository
     public function findDrawsToExecute(): array
     {
         $today = new \DateTime();
-        $today->modify('+3 day'); // La limite pour s'inscrire est de 3 jours avant l'évènement
+        $today->modify('+2 day'); // La limite pour s'inscrire est de 3 jours avant l'évènement
 
         return $this->createQueryBuilder('d')
             ->where('d.status = :status')
