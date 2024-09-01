@@ -75,40 +75,40 @@ class AppFixtures extends Fixture
         $admin->setIsEmailVerified(true);
         $manager->persist($admin);
 
-        // Création de 100 utilisateurs
-        for ($i = 0; $i < 100; $i++) {
-            $user = new User();
-            $user->setName($faker->userName);
-            $user->setEmail($faker->email);
-            $pw = $this->passwordHasher->hashPassword($user, "user");
-            $user->setPassword($pw);
-            $user->setRegistrationDate($faker->dateTimeBetween('-1 year', 'now'));
-            $user->setRoles(["ROLE_USER"]);
-            $manager->persist($user);
+        // // Création de 100 utilisateurs
+        // for ($i = 0; $i < 100; $i++) {
+        //     $user = new User();
+        //     $user->setName($faker->userName);
+        //     $user->setEmail($faker->email);
+        //     $pw = $this->passwordHasher->hashPassword($user, "user");
+        //     $user->setPassword($pw);
+        //     $user->setRegistrationDate($faker->dateTimeBetween('-1 year', 'now'));
+        //     $user->setRoles(["ROLE_USER"]);
+        //     $manager->persist($user);
 
-            // Achats de tickets pour une ou plusieurs tombolas aléatoires
-            $numTickets = $faker->numberBetween(1, 10); // Assurer que la quantité n'est pas nulle
-            $randomDraw = $drawReferences[array_rand($drawReferences)];
+        //     // Achats de tickets pour une ou plusieurs tombolas aléatoires
+        //     $numTickets = $faker->numberBetween(1, 10); // Assurer que la quantité n'est pas nulle
+        //     $randomDraw = $drawReferences[array_rand($drawReferences)];
 
-            $purchase = new Purchase();
-            $purchase->setUser($user);
-            $purchase->setDraw($randomDraw);
-            $purchase->setQuantity($numTickets);
-            $purchase->setPurchaseDate($faker->dateTimeBetween('-1 month', 'now'));
-            $purchase->setStatus('completed');
-            $manager->persist($purchase);
+        //     $purchase = new Purchase();
+        //     $purchase->setUser($user);
+        //     $purchase->setDraw($randomDraw);
+        //     $purchase->setQuantity($numTickets);
+        //     $purchase->setPurchaseDate($faker->dateTimeBetween('-1 month', 'now'));
+        //     $purchase->setStatus('completed');
+        //     $manager->persist($purchase);
 
-            for ($j = 0; $j < $numTickets; $j++) {
-                $ticket = new Tickets();
-                $ticket->setUser($user);
-                $ticket->setDraw($randomDraw);
-                $ticket->setTicketNumber($faker->unique()->randomNumber());
-                $ticket->setPurchaseDate($faker->dateTimeBetween('-1 month', 'now'));
-                $ticket->setStatus('purchased');
-                $ticket->setPurchase($purchase);
-                $manager->persist($ticket);
-            }
-        }
+        //     for ($j = 0; $j < $numTickets; $j++) {
+        //         $ticket = new Tickets();
+        //         $ticket->setUser($user);
+        //         $ticket->setDraw($randomDraw);
+        //         $ticket->setTicketNumber($faker->unique()->randomNumber());
+        //         $ticket->setPurchaseDate($faker->dateTimeBetween('-1 month', 'now'));
+        //         $ticket->setStatus('purchased');
+        //         $ticket->setPurchase($purchase);
+        //         $manager->persist($ticket);
+        //     }
+        // }
 
         $manager->flush();
     }
