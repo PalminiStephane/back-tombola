@@ -61,7 +61,7 @@ class DrawsRepository extends ServiceEntityRepository
     public function findDrawsToExecute(): array
     {
         $today = new \DateTime();
-        $today->modify('+1 day'); // La limite pour s'inscrire est de 1 jour avant l'évènement
+        $today->modify('+3 day'); // La limite pour s'inscrire est de 3 jours avant l'évènement
 
         return $this->createQueryBuilder('d')
             ->where('d.status = :status')
