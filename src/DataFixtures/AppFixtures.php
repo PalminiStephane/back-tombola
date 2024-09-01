@@ -72,6 +72,7 @@ class AppFixtures extends Fixture
         $admin->setPassword($pwa);
         $admin->setRegistrationDate($faker->dateTimeBetween('-1 year', 'now'));
         $admin->setRoles(["ROLE_ADMIN"]);
+        $admin->setIsEmailVerified(true);
         $manager->persist($admin);
 
         // Création de 100 utilisateurs
