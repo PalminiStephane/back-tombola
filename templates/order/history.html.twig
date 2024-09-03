@@ -20,7 +20,7 @@
                             <h5 class="mb-2" style="color: #2e7fe9;">{{ order.draw.title }}</h5>
                             <p class="mb-1">
                                 <strong>Date de l'achat :</strong> {{ order.purchaseDate|date('d/m/Y') }}<br>
-                                <strong>Date du tirage :</strong> {{ order.draw.drawDate|date('d/m/Y') }}<br>
+                                <strong>Date du tirage :</strong> {{ order.draw.drawDate|date_modify('-2 days')|date('d/m/Y') }}<br>
                                 <strong>Quantité :</strong> {{ order.quantity }}<br>
                                 <strong>Statut :</strong> 
                                 {% if order.status == 'completed' %}

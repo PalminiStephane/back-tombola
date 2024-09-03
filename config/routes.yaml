@@ -1,3 +1,7 @@
 #index:
 #    path: /
 #    controller: App\Controller\DefaultController::index
+stripe_webhook:
+    path: /webhook/stripe
+    controller: App\Controller\StripeWebhookController::handle
+

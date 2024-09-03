@@ -1,66 +1,56 @@
-<!-- Nav -->
-<nav class="navbar navbar-expand-lg navbar-light bg-ligth" style="background-color: #e3f2fd;">
-	<div class="container-fluid">
-		<a href="{{ path("default") }}" class="d-flex align-items-center mb-2 mb-lg-0 text-black text-decoration-none header-logo">
-			<img src="{{ asset('favicon.png') }}" height="24" alt="Logo GTP">
-			<span class="header-logo__title">GTP</span>
-		</a>
-		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
-			<span class="navbar-toggler-icon"></span>
-		</button>
-		<div class="collapse navbar-collapse" id="navbarSupportedContent">
-			<ul class="navbar-nav me-auto mb-2 mb-lg-0">
-				<li class="nav-item">
-					<a class="nav-link active" href="{{ path("default") }}">Accueil</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="{{ path('app_contact') }}">
-						<i class="bi bi-envelope"></i>
-						Contact</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="{{ path('app_about')}}">
-						<i class="bi bi-info-circle"></i>
-						A propos</a>
-				</li>
-			</ul>
-			<ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-				<li class="nav-item dropdown">
-					<a
-						class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
-						{# if app.user != null #}
-						{% if app.user %}
-							{# dump(app.user) #}
-							<span>{{ app.user.name }}</span>
-							<i class="bi bi-person-square"></i>
-						{% else %}
-							<span>Anonyme</span>
-							<i class="bi bi-person-square"></i>
-						{% endif %}
-					</a>
-					<ul
-						class="dropdown-menu">
-						{# <li><a class="dropdown-item" href="#">Profil</a></li> #}
-						<li>
-							<a class="dropdown-item" href="{{ path('app_order_history') }}">Historique des Achats</a>
-						</li>
-						{% if is_granted('ROLE_ADMIN') %}
-							<li>
-								<a class="dropdown-item" href="{{ path('app_backoffice_admin') }}">Backoffice</a>
-							</li>
-						{% endif %}
-						<li>
-							<hr class="dropdown-divider">
-						</li>
-						<li>
-							<a class="dropdown-item" href="{{ path('app_logout')}}">Déconnexion</a>
-						</li>
-					</ul>
-				</li>
-			</ul>
+    <!-- Nav -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-ligth" style="background-color: #e3f2fd;">
+        <div class="container-fluid">
+            <a href="{{ path("default") }}" class="d-flex align-items-center mb-2 mb-lg-0 text-black text-decoration-none header-logo">
+                <img src="{{ asset('favicon.png') }}" height="24" alt="Logo GTP">
+                <span class="header-logo__title">GTP</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{ path("default") }}">Accueil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_contact') }}"><i class="bi bi-envelope"></i> Contact</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_about')}}"><i class="bi bi-info-circle"></i> A propos</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-bs-toggle="dropdown">
+                            {# if app.user != null #}
+                            {% if app.user %}
+                                {# dump(app.user) #}
+                                <span>{{ app.user.name }}</span>
+                                <i class="bi bi-person-square"></i>
+                            {% else %}
+                                <span>Anonyme</span>
+                                <i class="bi bi-person-square"></i>
+                            {% endif %}
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">Profil</a></li>
+                            <li><a class="dropdown-item" href="{{ path('app_order_history') }}">Historique des Achats</a></li>
+                            {% if is_granted('ROLE_ADMIN') %}
+                                <li><a class="dropdown-item" href="{{ path('app_backoffice_admin') }}">Backoffice</a></li>
+                            {% endif %}
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="{{ path('app_logout')}}">Déconnexion</a></li>
+                        </ul>
+                    </li>
+                </ul>
 
-			<a href="{{ path('app_login')}}" class="btn btn-danger me-2 connexion">Connexion</a>
+                <a href="{{ path('app_login')}}" class="btn btn-danger me-2 connexion">Connexion</a>
 
-		</div>
-	</div>
-</nav>
+            </div>
+        </div>
+    </nav>

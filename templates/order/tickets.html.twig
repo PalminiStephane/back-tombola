@@ -25,7 +25,7 @@
                             </p>
                             <p class="ticket-info">
                                 <strong>Tirage :</strong> {{ ticket.draw.title }}<br>
-                                <strong>Date du tirage :</strong> {{ ticket.draw.drawDate|date('d/m/Y') }}
+                                <strong>Date du tirage :</strong> {{ ticket.draw.drawDate|date_modify('-2 days')|date('d/m/Y') }}
                             </p>
                         </div>
                         <div class="ticket-card-footer text-center">
