@@ -109,7 +109,7 @@ class RegistrationController extends AbstractController
 
             // Create the email
             $email = (new Email())
-                ->from('palministephane@gmail.com') // Use a verified sender email address
+                ->from('contact@gagnetesplaces.fr') // Use a verified sender email address
                 ->to($user->getEmail()) // The user's email
                 ->subject('Vérification de votre adresse email') // Email subject
                 ->html($this->renderView(
@@ -170,7 +170,7 @@ class RegistrationController extends AbstractController
     public function testSendEmail(MailerInterface $mailer): Response
     {
         $email = (new Email())
-            ->from('palministephane@gmail.com')  // Assurez-vous que cette adresse est vérifiée dans votre compte SES
+            ->from('contact@gagnetesplaces.fr')  // Assurez-vous que cette adresse est vérifiée dans votre compte SES
             ->to('stefax@live.fr')   // Adresse de test
             ->subject('Test Email from Symfony via SES')
             ->html('<p>This is a test email to confirm SES integration.</p>');

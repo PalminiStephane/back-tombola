@@ -3,4 +3,4 @@ framework:
     mailer:
         dsn: '%env(MAILER_DSN)%'
         envelope:
-            sender: 'palministephane@gmail.com' # Assurez-vous que cette adresse est vérifiée
+            sender: 'contact@gagnetesplaces.fr' # Assurez-vous que cette adresse est vérifiée
