@@ -7,12 +7,16 @@
     <div class="my-5 py-5 text-center">
         <img src="{{ asset('favicon.png') }}" height="100" alt="Logo Tombola" class="mb-3">
         <h1 class="display-6 fw-bold">Gagne Tes Places</h1>
-        <p class="lead mb-4 text-muted">
-            Participez à nos tombolas et gagnez des places pour voir l'OM jouer!
-        </p>
-        <p class="lead text-muted">
-            Tous les bénéfices de cette tombola permettront aux adhérents du club de judo de partir au Japon pour découvrir les origines de leur sport. Votre participation contribuera à réaliser ce rêve pour nos judokas passionnés.
-        </p>
+        <div class="promo-section">
+            <h2>Participez à nos tombolas et tentez de gagner 2 places en loge à chaque match de l’OM au Vélodrome !</h2>
+            <p class="highlight-text">🎉🎁 <strong>Loge « all inclusive » (repas, boissons à volonté) pour 2 personnes.</strong> 🎁🎉</p>
+            <p><strong>Les bénéfices seront reversés à l’association JJCB pour un projet de stage au Japon.</strong></p>
+            {% if app.user %}
+		<p><strong>🍀 BONNE CHANCE {{ app.user.name }} !!! 🍀</p>
+	    {% else %}
+		<a href="{{ path('app_register') }}" class="btn btn-lg btn-outline-primary mt-2">Inscription</a>
+	{% endif %}
+	</div>
     </div>
 
     <div class="container-xl bg-light p-5 border-top">
@@ -47,7 +51,7 @@
                     <h3 class="mb-0">{{ draw.title }}</h3>
                     <div class="mb-1 text-muted">Ticket à {{ draw.ticketPrice }}€</div>
                     <p class="mb-auto">{{ draw.description }}</p>
-                    <a href="{{ path('app_tombola_show', {'id': draw.id}) }}" class="stretched-link">Participer</a>
+                    <a href="{{ path('app_tombola_show', {'id': draw.id}) }}" class="btn-participate">Participer maintenant</a>
                 </div>
             </div>
         {% endfor %}

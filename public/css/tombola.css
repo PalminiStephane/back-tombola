@@ -162,3 +162,99 @@ h1 {
     right: -10px;
 }
 
+body {
+    background-image: url('/images/velodrome2.jpg');
+    background-size: cover; /* S'assure que l'image couvre tout l'écran */
+    background-position: center; /* Centre l'image */
+    background-attachment: fixed; /* L'image reste fixe lors du défilement */
+    color: #fff; /* Garde le texte lisible */
+    font-family: 'Arial', sans-serif;
+}
+
+.promo-section {
+    background: rgba(0, 0, 0, 0.6);
+    padding: 30px;
+    border-radius: 10px;
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Ajout d'une ombre */
+}
+
+.promo-section h2, .promo-section p {
+    color: #fff; /* Applique le texte en blanc uniquement pour les h2 et p de la promo-section */
+}
+
+h2, h3, p {
+    color: #333; /* Le texte est en gris pour contraster avec le fond */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+h2 {
+    line-height: 1.4; /* Augmente légèrement l'espacement vertical des titres */
+}
+
+p {
+    line-height: 1.6; /* Augmente légèrement l'espacement vertical des paragraphes */
+}
+
+
+.promo-section .highlight-text {
+    border: 2px solid #f39c12;
+    padding: 10px;
+    background-color: #FF5722;
+    border-radius: 10px;
+    display: inline-block;
+    color: white;
+    font-size: 1.2em;
+}
+
+.btn-participate {
+    display: inline-block;
+    padding: 10px 20px; /* Taille plus compacte */
+    background-color: #0072ce; /* Bleu OM */
+    color: white;
+    font-size: 16px; /* Taille de texte réduite */
+    font-weight: bold;
+    text-transform: uppercase;
+    border-radius: 30px; /* Légèrement arrondi */
+    text-align: center;
+    text-decoration: none; /* Pas de soulignement */
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15); /* Effet d'ombre subtil */
+    transition: all 0.3s ease;
+}
+
+.btn-participate:hover {
+    background-color: #005bb5; /* Bleu légèrement plus foncé au survol */
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2); /* Effet d'ombre plus intense au survol */
+    transform: translateY(-2px); /* Légère élévation au survol */
+}
+
+.btn-participate:active {
+    background-color: #004a99; /* Encore plus foncé au clic */
+    transform: translateY(0); /* Revenir à la position initiale lors du clic */
+}
+
+.about-section {
+    color: #fff; /* Texte en blanc */
+}
+
+.about-section p {
+    color: #fff; /* Paragraphe en blanc */
+}
+
+.about-section h2 {
+    color: #fff; /* Titre en blanc */
+}
+
+.footer-section {
+    background: rgba(255, 255, 255, 0.8); /* Fond blanc avec une légère transparence */
+    padding: 30px;
+    border-radius: 10px;
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Ombre plus légère pour un effet plus doux */
+    color: #333; /* Texte en gris foncé pour plus de lisibilité sur fond clair */
+}
+
