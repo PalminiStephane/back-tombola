@@ -27,16 +27,16 @@ class DrawLotteryCommand extends Command
 
     protected function configure(): void
     {
-        $this
-            ->setDescription('Exécute le tirage au sort pour les tombolas ouvertes.');
+        $this->setDescription('Exécute le tirage au sort pour les tombolas ouvertes.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
-
-        // Logique du tirage au sort ici
         $drawsToExecute = $this->entityManager->getRepository(Draws::class)->findDrawsToExecute();
+        
+        $totalDraws = count($drawsToExecute);
+        $io->text("Nombre de tirages à exécuter : $totalDraws");
 
         foreach ($drawsToExecute as $draw) {
             try {
@@ -53,13 +53,12 @@ class DrawLotteryCommand extends Command
                 if ($winner) {
                     $draw->setWinners($winner->getName());
                     $draw->setPrize($prize);
+                    $draw->setStatus('closed');
+                    $this->entityManager->persist($draw);
                     $io->success('Gagnant pour ' . $draw->getTitle() . ' : ' . $winner->getName());
                 } else {
                     $io->warning('Aucun gagnant sélectionné pour la tombola ' . $draw->getTitle());
                 }
-
-                $draw->setStatus('closed');
-                $this->entityManager->persist($draw);
             } catch (\Exception $e) {
                 $io->error('Erreur lors du traitement de la tombola ' . $draw->getTitle() . ': ' . $e->getMessage());
                 $this->logger->error('Erreur lors du tirage au sort de la tombola ' . $draw->getId(), ['exception' => $e]);
@@ -67,7 +66,6 @@ class DrawLotteryCommand extends Command
         }
 
         $this->entityManager->flush();
-
         $io->success('Les tirages au sort ont été exécutés avec succès.');
 
         return Command::SUCCESS;
@@ -90,3 +88,4 @@ class DrawLotteryCommand extends Command
         return $draw->getPrize();
     }
 }
+

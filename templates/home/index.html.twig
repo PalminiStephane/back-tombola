@@ -14,13 +14,12 @@
             {% if app.user %}
 		<p><strong>🍀 BONNE CHANCE {{ app.user.name }} !!! 🍀</p>
 	    {% else %}
-		<a href="{{ path('app_register') }}" class="btn btn-lg btn-outline-primary mt-2">Inscription</a>
+		<a href="{{ path('app_register') }}" class="btn btn-lg btn-outline-warning mt-2">Inscription</a>
 	{% endif %}
 	</div>
     </div>
 
     <div class="container-xl bg-light p-5 border-top">
-        <h2 class="text-muted fw-bold mb-4">Prochaines Tombolas</h2>
         
         {# Afficher les informations du dernier gagnant #}
         {% if lastWinner %}
@@ -40,6 +39,7 @@
             </div>
         {% endif %}
         
+        <h2 class="text-muted fw-bold mb-4">Prochaines Tombolas</h2>
         {# Afficher les tombolas à venir #}
         {% for draw in draws %}
             <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm bg-white position-relative">
