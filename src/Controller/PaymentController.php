@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Draws;
+use App\Entity\Tickets;
 use App\Entity\Purchase;
 use App\Repository\DrawsRepository;
 use App\Form\PurchaseType;
@@ -69,28 +70,47 @@ class PaymentController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/payment/success", name="payment_success")
-     */
-    public function success(Request $request): Response
-    {
-        $orderId = $request->query->get('token');
-        $capture = $this->paypalService->captureOrder($orderId);
+/**
+ * @Route("/payment/success", name="payment_success")
+ */
+public function success(Request $request): Response
+{
+    $orderId = $request->query->get('token');
+    $capture = $this->paypalService->captureOrder($orderId);
 
-        if ($capture && isset($capture['status']) && $capture['status'] === 'COMPLETED') {
-            $purchase = $this->entityManager->getRepository(Purchase::class)->findOneBy([
-                'paypalOrderId' => $orderId,
-            ]);
+    if ($capture && isset($capture['status']) && $capture['status'] === 'COMPLETED') {
+        $purchase = $this->entityManager->getRepository(Purchase::class)->findOneBy([
+            'paypalOrderId' => $orderId,
+        ]);
 
-            if ($purchase) {
-                $purchase->setStatus('completed');
-                $this->entityManager->flush();
-                $this->addFlash('success', 'Paiement réussi !');
+        if ($purchase) {
+            $purchase->setStatus('completed');
+
+            // Génération des tickets après succès du paiement
+            for ($i = 0; $i < $purchase->getQuantity(); $i++) {
+                $ticket = new Tickets(); // Utilisation de l'entité Tickets
+                $ticket->setUser($purchase->getUser());
+                $ticket->setDraw($purchase->getDraw());
+                $ticket->setTicketNumber(mt_rand(100000, 999999)); // Vous pouvez utiliser une méthode plus robuste pour générer des numéros uniques
+                $ticket->setPurchaseDate(new \DateTime());
+                $ticket->setStatus('purchased');
+                $ticket->setPurchase($purchase);
+
+                $this->entityManager->persist($ticket);
             }
-        }
 
-        return $this->render('payment/success.html.twig');
+            // Mise à jour du nombre de tickets disponibles pour le tirage
+            $remainingTickets = $purchase->getDraw()->getTicketsAvailable() - $purchase->getQuantity();
+            $purchase->getDraw()->setTicketsAvailable($remainingTickets);
+
+            $this->entityManager->flush();
+            $this->addFlash('success', 'Paiement réussi et vos tickets ont été créés !');
+        }
     }
+
+    return $this->render('payment/success.html.twig');
+}
+
 
     /**
      * @Route("/payment/cancel", name="payment_cancel")
