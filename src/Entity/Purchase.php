@@ -54,7 +54,8 @@ class Purchase
      /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $stripeSessionId;
+    private $paypalOrderId;
+
 
     public function __construct()
     {
@@ -157,14 +158,14 @@ class Purchase
         return $this;
     }
 
-    public function getStripeSessionId(): ?string
+    public function getPaypalOrderId(): ?string
     {
-        return $this->stripeSessionId;
+        return $this->paypalOrderId;
     }
 
-    public function setStripeSessionId(?string $stripeSessionId): self
+    public function setPaypalOrderId(?string $paypalOrderId): self
     {
-        $this->stripeSessionId = $stripeSessionId;
+        $this->paypalOrderId = $paypalOrderId;
 
         return $this;
     }
