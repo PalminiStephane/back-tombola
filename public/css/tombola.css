@@ -53,6 +53,7 @@ h1 {
 }
 
 #confetti-container {
+    display: none;
     position: fixed;
     top: 0;
     left: 0;
@@ -60,7 +61,8 @@ h1 {
     height: 100vh;
     background: url('/images/confetti.gif') no-repeat center center;
     background-size: cover;
-    z-index: 9999;
+    z-index: -1;
+    pointer-events: none;
 }
 
 #winner-container {
