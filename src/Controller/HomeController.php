@@ -70,7 +70,7 @@ class HomeController extends AbstractController
             // Créer et envoyer l'email
             $email = (new Email())
                 ->from($contactData['email'])
-                ->to('palministephane@gmail.com') // Remplacez par votre adresse email
+                ->to('contact@gagnetesplaces.fr')
                 ->subject($contactData['subject'])
                 ->text($contactData['message']);
 
